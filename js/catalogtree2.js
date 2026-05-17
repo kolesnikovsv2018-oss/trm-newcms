@@ -16,10 +16,14 @@ function TreeConfig2(StartGroupId, ActiveGroupId, ActiveElem, LinkPrefix) {
     JSONMenu: [],
     getSubGroups: function (ActiveGroup, JSONMenu) {
       if (JSONMenu === undefined) { JSONMenu = this.JSONMenu; }
+      if (ActiveGroup === undefined || ActiveGroup === null) { return null; }
+      if (!Array.isArray(JSONMenu) || !JSONMenu.length) { return null; }
 
       // если активная группа - корневая
       // подразумевается, что в корне все группы имеют одинакового родителя
-      if (JSONMenu[0].GroupID_parent.toString() === ActiveGroup.toString()) {
+      if (JSONMenu[0].GroupID_parent !== undefined &&
+        JSONMenu[0].GroupID_parent !== null &&
+        JSONMenu[0].GroupID_parent.toString() === ActiveGroup.toString()) {
         return JSONMenu;
       }
 
@@ -30,7 +34,7 @@ function TreeConfig2(StartGroupId, ActiveGroupId, ActiveElem, LinkPrefix) {
           }
           else {
             var SubGroups = this.getSubGroups(ActiveGroup, JSONMenu[i].children);
-            if (SubGroups) {
+            if (SubGroups && SubGroups.length) {
               return SubGroups;
             }
           }
@@ -47,8 +51,16 @@ function CatalogTree2(LocalMenuConfig) {
   this.setMainMenu = function (str, StatusCode, StatusText) {
     if (!checkAndAlertStatus(StatusCode, StatusText)) { return; }
 
+    var responseText = (typeof str === 'string') ? str.trim() : '';
     var JSONMenu = parseJSONSafe(str, null);
-    if (!JSONMenu || !Array.isArray(JSONMenu)) {
+    if (JSONMenu === null && responseText === 'null') {
+      JSONMenu = [];
+      if (typeof NewCMSErrorHandler !== 'undefined') {
+        NewCMSErrorHandler.info('CatalogTree2.setMainMenu: получен null, использовано пустое меню');
+      }
+    }
+
+    if (!Array.isArray(JSONMenu)) {
       if (typeof NewCMSErrorHandler !== 'undefined') {
         NewCMSErrorHandler.error('CatalogTree2.setMainMenu: пустой или невалидный ответ', { preview: (str || '').substring(0, 80) });
       }
@@ -72,8 +84,16 @@ function CatalogTree2(LocalMenuConfig) {
   this.setSubGroups = function (str, StatusCode, StatusText) {
     if (!checkAndAlertStatus(StatusCode, StatusText)) { return; }
 
+    var responseText = (typeof str === 'string') ? str.trim() : '';
     var JSONMenu = parseJSONSafe(str, null);
-    if (!JSONMenu) {
+    if (JSONMenu === null && responseText === 'null') {
+      JSONMenu = [];
+      if (typeof NewCMSErrorHandler !== 'undefined') {
+        NewCMSErrorHandler.info('CatalogTree2.setSubGroups: получен null, подгруппы отсутствуют');
+      }
+    }
+
+    if (!Array.isArray(JSONMenu)) {
       if (typeof NewCMSErrorHandler !== 'undefined') {
         NewCMSErrorHandler.error('CatalogTree2.setSubGroups: пустой или невалидный ответ', { preview: (str || '').substring(0, 80) });
       }
