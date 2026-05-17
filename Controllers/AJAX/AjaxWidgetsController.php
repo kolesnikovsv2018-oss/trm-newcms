@@ -5,6 +5,7 @@ namespace NewCMS\Controllers\AJAX;
 use NewCMS\Controllers\NewController;
 use NewCMS\Domain\Exceptions\NewArticlesExceptions;
 use NewCMS\Domain\NewNews;
+use NewCMS\Libs\NewCMSPathResolver;
 use NewCMS\Views\CMSBaseView;
 use NewCMS\Widgets\NewArticlesTitlesList;
 use NewCMS\Widgets\NewLastProducts;
@@ -59,7 +60,7 @@ public function actionGetLastNewsHTML()
 
 
         $NewsView = new CMSBaseView("onenew", null);
-        $NewsView->setPathToViews( ROOT . TOPIC . "/views/main/inc" );
+        $NewsView->setPathToViews(NewCMSPathResolver::getTopicFsPath() . "/views/main/inc");
         //ob_start();
         foreach( $NewsList as $OneNew )
         {

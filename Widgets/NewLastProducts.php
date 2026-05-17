@@ -3,6 +3,7 @@
 namespace NewCMS\Widgets;
 
 use NewCMS\Domain\Exceptions\NewProductsWrongIdExceptions;
+use NewCMS\Libs\NewCMSPathResolver;
 use NewCMS\Repositories\NewLiteProductForCollectionRepository;
 use NewCMS\Views\CMSBaseView;
 use TRMEngine\Cookies\TRMCookie;
@@ -133,7 +134,7 @@ static public function render(NewLastProducts $LastProductsObject): void
     }
 
     $LastProductsView = new CMSBaseView("lastproducts", null);
-    $LastProductsView->setPathToViews( ROOT . TOPIC . "/views/main/inc" );
+    $LastProductsView->setPathToViews(NewCMSPathResolver::getTopicFsPath() . "/views/main/inc");
     $LastProductsView->setVar( "LastProducts", $LastProducts );
     $LastProductsView->render();    
 }
