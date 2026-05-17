@@ -6,8 +6,14 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use TRMEngine\PathFinder\TRMPathFinder;
 
+$adminPrefixRaw = getenv('CMS_ADMIN_WEB_PATH');
+if (!is_string($adminPrefixRaw) || trim($adminPrefixRaw) === '') {
+  $adminPrefixRaw = '/admin';
+}
+$adminPrefix = '/' . trim($adminPrefixRaw, " \t\n\r\0\x0B/");
+
 return array(
-  'core' => static function (RouteCollection $Routes): void {
+  'core' => static function (RouteCollection $Routes) use ($adminPrefix): void {
     $Routes->add('mainindex', new Route(
       '/',
       array('_controller' => NewCMS\Controllers\MainController::class, 'action' => 'Index')
@@ -50,57 +56,57 @@ return array(
     ));
 
     $Routes->add('newajaxproduct', new Route(
-      '/admin/new-ajax-product/{action}',
+      $adminPrefix . '/new-ajax-product/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxProductController::class)
     ));
 
     $Routes->add('newajaxgroup', new Route(
-      '/admin/new-ajax-group/{action}',
+      $adminPrefix . '/new-ajax-group/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxGroupController::class)
     ));
 
     $Routes->add('newajaxarticle', new Route(
-      '/admin/new-ajax-article/{action}',
+      $adminPrefix . '/new-ajax-article/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxArticleController::class)
     ));
 
     $Routes->add('newajaxvendor', new Route(
-      '/admin/new-ajax-vendor/{action}',
+      $adminPrefix . '/new-ajax-vendor/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxVendorController::class)
     ));
 
     $Routes->add('newajaxnews', new Route(
-      '/admin/new-ajax-news/{action}',
+      $adminPrefix . '/new-ajax-news/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxNewsController::class)
     ));
 
     $Routes->add('newajaxfeature', new Route(
-      '/admin/new-ajax-feature/{action}',
+      $adminPrefix . '/new-ajax-feature/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxFeatureController::class)
     ));
 
     $Routes->add('newajaxprice', new Route(
-      '/admin/new-ajax-price/{action}',
+      $adminPrefix . '/new-ajax-price/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxPriceController::class)
     ));
 
     $Routes->add('newajaxservice', new Route(
-      '/admin/new-ajax-service/{action}',
+      $adminPrefix . '/new-ajax-service/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxServiceController::class)
     ));
 
     $Routes->add('newajaxsender', new Route(
-      '/admin/new-ajax-sender/{action}',
+      $adminPrefix . '/new-ajax-sender/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxSenderController::class)
     ));
 
     $Routes->add('newajaxorder', new Route(
-      '/admin/new-ajax-order/{action}',
+      $adminPrefix . '/new-ajax-order/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxOrderController::class)
     ));
 
     $Routes->add('newajaxquery', new Route(
-      '/admin/new-ajax-query',
+      $adminPrefix . '/new-ajax-query',
       array(
         '_controller' => NewCMS\Controllers\AJAX\NewAjaxQueryController::class,
         'action' => 'Start'
@@ -108,7 +114,7 @@ return array(
     ));
 
     $Routes->add('newajaxyandex', new Route(
-      '/admin/new-ajax-yandex/{action}',
+      $adminPrefix . '/new-ajax-yandex/{action}',
       array('_controller' => NewCMS\Controllers\AJAX\NewAjaxYandexController::class)
     ));
 
@@ -157,7 +163,7 @@ return array(
     ));
 
     $Routes->add('admin', new Route(
-      '/admin/{param}',
+      $adminPrefix . '/{param}',
       array('_controller' => NewCMS\Controllers\AdminController::class, 'action' => 'Base', 'param' => ''),
       array('param' => '[A-Za-z0-9-_/]*')
     ));

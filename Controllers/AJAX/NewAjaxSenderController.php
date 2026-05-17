@@ -27,7 +27,9 @@ public function __construct(Request $Request, TRMDIContainer $DIC)
     parent::__construct($Request, $DIC);
     
     $this->Sender = new NewEmailAutoSender( require_once CONFIG . "/emailconfig.php" );
-    $cmsRoot = defined('FULLWEB') ? FULLWEB : (ROOT . '/vendor/trm/newcms');
+    // __DIR__ points to .../newcms/Controllers/AJAX in composer vendor layout.
+    // We need package root .../newcms, so parent level is 2.
+    $cmsRoot = defined('FULLWEB') ? FULLWEB : dirname(__DIR__, 2);
     $this->MessageFileName = rtrim($cmsRoot, '/\\') . '/Libs/1ps.txt';
 }
 
