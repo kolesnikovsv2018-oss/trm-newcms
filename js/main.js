@@ -10,7 +10,9 @@ function checkAgreement() {
     checkCookie !== 'yes'
   ) {
     var agreementDiv = document.getElementById('agreementdivid');
-    agreementDiv.style.display = 'flex';
+    if (agreementDiv) {
+      agreementDiv.style.display = 'flex';
+    }
   }
 }
 
@@ -41,6 +43,7 @@ function setOnScrollArrow() {
   window.onscroll = function () {
     var scrolled = window.pageYOffset || document.documentElement.scrollTop;
     var arrowdiv = document.getElementById('uparrowid');
+    if (!arrowdiv) { return; }
     if (scrolled >= 500) arrowdiv.style.display = 'flex';
     if (scrolled < 500) arrowdiv.style.display = 'none';
   };

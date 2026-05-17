@@ -21,17 +21,21 @@ function setTextTo(Text, DivId) {
 }
 
 /**
- * Проверяет соответсвие кода ответа сервера на 200,
- * если отличается, то выведет окно с ошибкой
- * 
- * @param {Number} StatusCode - если передан статус и он не 200, то показываеся окно с ошибкой
- * @param {String} StatusText - может содержать текст сообщения при ошибке
- * 
- * @returns {Boolean} - true в случае кода ответа 200, false во всех других
+ * Проверяет соответствие кода ответа сервера 200.
+ * При отличии логирует ошибку (без alert).
+ *
+ * @param {Number} StatusCode
+ * @param {String} StatusText
+ * @returns {Boolean}
  */
 function checkAndAlertStatus(StatusCode, StatusText) {
-  if ("undefined" !== typeof StatusCode && StatusCode !== 200) {
-    alert(("undefined" !== typeof StatusText && StatusText) ? StatusText : "Ошибка при запросе к серверу ");
+  if (typeof StatusCode !== 'undefined' && StatusCode !== 200) {
+    var msg = (typeof StatusText !== 'undefined' && StatusText) ? StatusText : 'Ошибка при запросе к серверу';
+    if (typeof NewCMSErrorHandler !== 'undefined') {
+      NewCMSErrorHandler.error('HTTP ' + StatusCode + ': ' + msg, { statusCode: StatusCode, statusText: StatusText });
+    } else {
+      console.error('[NewCMS] HTTP ' + StatusCode + ':', msg);
+    }
     return false;
   }
   return true;
@@ -78,28 +82,43 @@ function createRequest() {
  * в случае синхронного запроса вернется строка с ответом, 
  * или false при возникновении ошибки 
  */
-function sendRequest(locationRequest, mtd, parameters, func, context) {
-  if ('undefined' === typeof context || undefined === context) {
+/**
+ * @param {String}   locationRequest
+ * @param {String}   mtd
+ * @param {String}   parameters
+ * @param {Function} func        - callback успешного ответа(str, StatusCode, StatusText)
+ * @param {Object}   context
+ * @param {Function} [errorFunc] - callback ошибки(str, StatusCode, StatusText); если не задан, вызывается func
+ * @param {Number}   [timeoutMs] - таймаут мс (по умолчанию 30000)
+ */
+function sendRequest(locationRequest, mtd, parameters, func, context, errorFunc, timeoutMs) {
+  if (typeof context === 'undefined' || context === null) {
     context = this;
+  }
+  if (!locationRequest) {
+    if (typeof NewCMSErrorHandler !== 'undefined') {
+      NewCMSErrorHandler.error('sendRequest: пустой URL');
+    }
+    return false;
   }
   // Создаем объект запроса
   var request = createRequest();
   if (!request) {
-    alert("Браузер не поддерживает технологию AJAX");
+    if (typeof NewCMSErrorHandler !== 'undefined') {
+      NewCMSErrorHandler.error('sendRequest: браузер не поддерживает AJAX');
+    }
+    if (typeof errorFunc === 'function') { errorFunc.call(context, '', 0, 'No AJAX'); }
     return false;
   }
 
   // указывает как будет производиться запрос , асинхронно или обычным (синхронным) способом
   var async = true;
-  // если в аргументах не указана функция callback-а, 
-  // то запрос всегда выполняется синхронно
-  // и возвращается строка!
   if (func === undefined || !func) { async = false; }
 
-  // метод запроса на основе переданного, если не POST или post, то будет GET
   var method = "GET";
-  if (undefined !== mtd &&
-    mtd.toUpperCase() === "POST") { method = "POST"; }
+  if (typeof mtd !== 'undefined' && mtd && mtd.toUpperCase() === "POST") { method = "POST"; }
+
+  var requestTimeout = (typeof timeoutMs === 'number' && timeoutMs > 0) ? timeoutMs : 30000;
 
   // Посылаем запрос методом method 
   // Указываем адрес,
@@ -109,55 +128,64 @@ function sendRequest(locationRequest, mtd, parameters, func, context) {
     parameters = null;
   }
   request.open(method, locationRequest, async);
-  // Отправляем дополнительно header, если метод POST
   if (method === "POST") {
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   }
 
   if (async) {
-    // функция отслеживания состояния запроса при его изменении
-    // и вызова функции-callback-а (func из аргументов!!!)
-    // если все прошло удачно (status == 200)
+    request.timeout = requestTimeout;
+
     request.onreadystatechange = function () {
-      //            var StateString = [];
-      //            StateString[0] = "начальное состояние";
-      //            StateString[1] = "вызван open";
-      //            StateString[2] = "получены заголовки";
-      //            StateString[3] = "загружается тело";
-      //            StateString[4] = "запрос завершён";
-      //            console.log(locationRequest, StateString[this.readyState])
+      if (this.readyState !== 4) { return; }
 
-      if (this.readyState != 4) { return; }
+      var responseText = this.responseText || '';
+      var isSuccess    = (this.status >= 200 && this.status < 300);
 
-      if (this.status == 200) {
-        func.call(context,
-          this.responseText ? this.responseText : '',
-          this.status,
-          this.statusText ? this.statusText : ''
-        );
-      }
-      else // возможность вызвать другую функцию в случае ошибки
-      {
-        func.call(context,
-          this.responseText ? this.responseText : '',
-          this.status,
-          this.statusText ? this.statusText : ''
-        );
+      if (isSuccess) {
+        func.call(context, responseText, this.status, this.statusText || '');
+      } else {
+        if (typeof NewCMSErrorHandler !== 'undefined') {
+          NewCMSErrorHandler.error('sendRequest: HTTP ' + this.status, { url: locationRequest });
+        }
+        var cb = (typeof errorFunc === 'function') ? errorFunc : func;
+        cb.call(context, responseText, this.status, this.statusText || '');
       }
     };
-    // Отправляем запрос после установки обработчика асинхронного ответа 
+
+    request.onerror = function () {
+      if (typeof NewCMSErrorHandler !== 'undefined') {
+        NewCMSErrorHandler.error('sendRequest: сетевая ошибка', { url: locationRequest });
+      }
+      var cb = (typeof errorFunc === 'function') ? errorFunc : func;
+      if (typeof cb === 'function') { cb.call(context, '', 0, 'Network error'); }
+    };
+
+    request.ontimeout = function () {
+      if (typeof NewCMSErrorHandler !== 'undefined') {
+        NewCMSErrorHandler.warn('sendRequest: timeout (' + requestTimeout + 'ms)', { url: locationRequest });
+      }
+      var cb = (typeof errorFunc === 'function') ? errorFunc : func;
+      if (typeof cb === 'function') { cb.call(context, '', 408, 'Timeout'); }
+    };
+
     request.send(parameters);
     return true;
   }
-  // отправляется простой синхронный запрос 
-  // и выполнение останавливается в ожидании ответа запроса
-  request.send(parameters);
-  if (request.status != 200) {
-    //Если сервер вернул ошибку
-    alert("Ошибка получения данных из " + locationRequest + ":\n" + (request.status ? request.statusText : 'запрос не удался'));
+
+  // Синхронный запрос
+  try {
+    request.send(parameters);
+  } catch (e) {
+    if (typeof NewCMSErrorHandler !== 'undefined') {
+      NewCMSErrorHandler.error('sendRequest (sync): ошибка отправки', { error: e.message });
+    }
     return false;
   }
-
-  // Если всё хорошо возвращаем ответ в виде строки
-  return request.responseText;
+  if (request.status < 200 || request.status >= 300) {
+    if (typeof NewCMSErrorHandler !== 'undefined') {
+      NewCMSErrorHandler.error('sendRequest (sync): HTTP ' + request.status, { url: locationRequest });
+    }
+    return false;
+  }
+  return request.responseText || '';
 }

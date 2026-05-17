@@ -21,11 +21,28 @@ function CatalogTree(LocalMenuConfig)
     this.JSONfinal = function(str, StatusCode, StatusText)
     {
         if( !checkAndAlertStatus(StatusCode, StatusText) ) { return; }
-        var JSONMenu = JSON.parse(str);
+
+        var JSONMenu = parseJSONSafe(str, null);
+        if( !JSONMenu || !Array.isArray(JSONMenu) || !JSONMenu.length ) {
+            if( typeof NewCMSErrorHandler !== 'undefined' ) {
+                NewCMSErrorHandler.error('CatalogTree: пустой или невалидный ответ', { preview: (str || '').substring(0, 80) });
+            }
+            return;
+        }
+
         var AJAXDiv = document.getElementById(LocalMenuConfig.DivNameId);
-        
+        if( !AJAXDiv ) {
+            if( typeof NewCMSErrorHandler !== 'undefined' ) {
+                NewCMSErrorHandler.warn('CatalogTree: div не найден', { id: LocalMenuConfig.DivNameId });
+            }
+            return;
+        }
+
         AJAXDiv.innerHTML = "";
-        AJAXDiv.appendChild( instance.generateUlNew(JSONMenu) );
+        var ul = instance.generateUlNew(JSONMenu);
+        if( ul ) {
+            AJAXDiv.appendChild(ul);
+        }
         instance.openFolder(LocalMenuConfig.ActiveGroupId);
     };
 

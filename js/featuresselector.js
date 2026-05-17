@@ -76,7 +76,14 @@ function FeaturesSelector(LocalSelectorConfig, onChangeCallback) {
 
   this.JSONfinal = function (str, StatusCode, StatusText) {
     if (!checkAndAlertStatus(StatusCode, StatusText)) { return; }
-    var JSONMenu = JSON.parse(str);
+
+    var JSONMenu = parseJSONSafe(str, null);
+    if (!JSONMenu || !Array.isArray(JSONMenu)) {
+      if (typeof NewCMSErrorHandler !== 'undefined') {
+        NewCMSErrorHandler.error('FeaturesSelector: пустой или невалидный ответ', { preview: (str || '').substring(0, 80) });
+      }
+      return;
+    }
 
     var UlNode = instance.generateUlNew(JSONMenu);
     if (!UlNode) { return; }
@@ -167,13 +174,29 @@ function FeaturesSelector(LocalSelectorConfig, onChangeCallback) {
 
     var CheckFlag;
 
-    LocalSelectorConfig.AllFeatures = Nodes[0];
-    if (!LocalSelectorConfig.AllFeatures.length) {
-      document.getElementById(LocalSelectorConfig.DivNameId).innerHTML = "";
-      document.getElementById(LocalSelectorConfig.DivNameId).style.display = "none";
+    // Валидация структуры ответа
+    if (!Array.isArray(Nodes) || Nodes.length < 2) {
+      if (typeof NewCMSErrorHandler !== 'undefined') {
+        NewCMSErrorHandler.error('FeaturesSelector: Nodes невалидна', { type: typeof Nodes });
+      }
+      var containerDiv = document.getElementById(LocalSelectorConfig.DivNameId);
+      if (containerDiv) {
+        containerDiv.innerHTML = "";
+        containerDiv.style.display = "none";
+      }
       return null;
     }
-    LocalSelectorConfig.Selected = Nodes[1];
+
+    LocalSelectorConfig.AllFeatures = Nodes[0];
+    if (!Array.isArray(LocalSelectorConfig.AllFeatures) || !LocalSelectorConfig.AllFeatures.length) {
+      var containerDiv = document.getElementById(LocalSelectorConfig.DivNameId);
+      if (containerDiv) {
+        containerDiv.innerHTML = "";
+        containerDiv.style.display = "none";
+      }
+      return null;
+    }
+    LocalSelectorConfig.Selected = Array.isArray(Nodes[1]) ? Nodes[1] : [];
 
     TreeUl = document.createElement('ul');
     for (var i = 0; i < LocalSelectorConfig.AllFeatures.length; i++) {

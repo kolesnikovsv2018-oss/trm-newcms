@@ -47,25 +47,54 @@ function CatalogTree2(LocalMenuConfig) {
   this.setMainMenu = function (str, StatusCode, StatusText) {
     if (!checkAndAlertStatus(StatusCode, StatusText)) { return; }
 
-    LocalMenuConfig.JSONMenu = JSON.parse(str);
+    var JSONMenu = parseJSONSafe(str, null);
+    if (!JSONMenu || !Array.isArray(JSONMenu)) {
+      if (typeof NewCMSErrorHandler !== 'undefined') {
+        NewCMSErrorHandler.error('CatalogTree2.setMainMenu: пустой или невалидный ответ', { preview: (str || '').substring(0, 80) });
+      }
+      return;
+    }
 
-    LocalMenuConfig.ActiveElem.appendChild(instance.generateUlNew(LocalMenuConfig.JSONMenu));
+    LocalMenuConfig.JSONMenu = JSONMenu;
+    if (!LocalMenuConfig.ActiveElem) {
+      if (typeof NewCMSErrorHandler !== 'undefined') {
+        NewCMSErrorHandler.warn('CatalogTree2.setMainMenu: ActiveElem не задан');
+      }
+      return;
+    }
+
+    var ul = instance.generateUlNew(LocalMenuConfig.JSONMenu);
+    if (ul) {
+      LocalMenuConfig.ActiveElem.appendChild(ul);
+    }
   };
 
   this.setSubGroups = function (str, StatusCode, StatusText) {
     if (!checkAndAlertStatus(StatusCode, StatusText)) { return; }
 
-    LocalMenuConfig.JSONMenu = JSON.parse(str);
+    var JSONMenu = parseJSONSafe(str, null);
+    if (!JSONMenu) {
+      if (typeof NewCMSErrorHandler !== 'undefined') {
+        NewCMSErrorHandler.error('CatalogTree2.setSubGroups: пустой или невалидный ответ', { preview: (str || '').substring(0, 80) });
+      }
+      return;
+    }
 
-    var MenuTreeDiv = document.createElement('div');
+    LocalMenuConfig.JSONMenu = JSONMenu;
+
     var SubGroups = LocalMenuConfig.getSubGroups(LocalMenuConfig.ActiveGroupId);
     var UlNode = instance.generateSubGroupsUl(SubGroups);
     if (UlNode) {
+      var MenuTreeDiv = document.createElement('div');
       MenuTreeDiv.appendChild(UlNode);
       MenuTreeDiv.style.display = "block";
       var ContainerDiv = document.getElementById(LocalMenuConfig.SubGroupsDivId);
-      ContainerDiv.appendChild(MenuTreeDiv);
-      ContainerDiv.style.display = "block";
+      if (ContainerDiv) {
+        ContainerDiv.appendChild(MenuTreeDiv);
+        ContainerDiv.style.display = "block";
+      } else if (typeof NewCMSErrorHandler !== 'undefined') {
+        NewCMSErrorHandler.warn('CatalogTree2.setSubGroups: контейнер не найден', { id: LocalMenuConfig.SubGroupsDivId });
+      }
     }
   };
 

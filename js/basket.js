@@ -25,13 +25,33 @@ function Basket(BasketName) //contactform)
       this.Goods = [];
       tmp = this.packstr.split("|");
       for (var i = 0; i < tmp.length; i++) {
-        this.Goods.push(tmp[i].split("-"));
+        if (!tmp[i] || !tmp[i].trim()) { continue; }
+        var parts = tmp[i].split("-");
+        if (parts.length !== 2) {
+          if (typeof NewCMSErrorHandler !== 'undefined') {
+            NewCMSErrorHandler.warn('Basket: невалидный формат товара', { item: tmp[i] });
+          }
+          continue;
+        }
+        var id    = parts[0].trim();
+        var count = parseInt(parts[1], 10);
+        if (!id || isNaN(count) || count <= 0) {
+          if (typeof NewCMSErrorHandler !== 'undefined') {
+            NewCMSErrorHandler.warn('Basket: невалидные данные товара', { id: id, count: count });
+          }
+          continue;
+        }
+        this.Goods.push([id, count]);
       }
-      document.getElementById(this.BasketDivId).innerHTML = this.Goods.length.toString();
+      var basketDiv = document.getElementById(this.BasketDivId);
+      if (basketDiv) {
+        basketDiv.innerHTML = this.Goods.length ? this.Goods.length.toString() : "";
+      }
     }
     else {
       this.Goods = [];
-      document.getElementById(this.BasketDivId).innerHTML = "";
+      var basketDiv = document.getElementById(this.BasketDivId);
+      if (basketDiv) { basketDiv.innerHTML = ""; }
     }
   };
 
@@ -82,7 +102,8 @@ function Basket(BasketName) //contactform)
       this.Goods[k][1] = count;
     }
     this.putGoodsToCookies();
-    document.getElementById(this.BasketDivId).innerHTML = this.Goods.length.toString();
+    var basketDiv = document.getElementById(this.BasketDivId);
+    if (basketDiv) { basketDiv.innerHTML = this.Goods.length.toString(); }
   };
 
   this.removeGoods = function (id_price) {
@@ -91,8 +112,11 @@ function Basket(BasketName) //contactform)
       if (i !== undefined) {
         this.Goods.splice(i, 1);
         this.putGoodsToCookies();
-        if (this.Goods.length) document.getElementById(this.BasketDivId).innerHTML = "(" + this.Goods.length + ")";
-        else document.getElementById(this.BasketDivId).innerHTML = "";
+        var basketDiv = document.getElementById(this.BasketDivId);
+        if (basketDiv) {
+          if (this.Goods.length) { basketDiv.innerHTML = "(" + this.Goods.length + ")"; }
+          else { basketDiv.innerHTML = ""; }
+        }
       }
     }
   };
@@ -100,7 +124,8 @@ function Basket(BasketName) //contactform)
   this.emptyBasket = function () {
     this.Goods = [];
     this.putGoodsToCookies();
-    document.getElementById(this.BasketDivId).innerHTML = "";
+    var basketDiv = document.getElementById(this.BasketDivId);
+    if (basketDiv) { basketDiv.innerHTML = ""; }
   };
 
 }
