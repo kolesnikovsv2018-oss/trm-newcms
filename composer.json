@@ -1,0 +1,23 @@
+{
+  "name": "trm/newcms",
+  "version": "1.0.0",
+  "description": "NewCMS based on TRMEngine framework",
+  "authors": [
+    {
+      "name": "TRM",
+      "email": "trm@mail.ru"
+    }
+  ],
+  "require": {
+    "php": ">=8.3.0",
+    "trm/trmengine": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "NewCMS\\": ""
+    },
+    "files": [
+      "Libs/GlobalConfig.php"
+    ]
+  }
+}
