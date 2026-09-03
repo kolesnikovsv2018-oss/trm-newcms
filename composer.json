@@ -1,7 +1,8 @@
 {
   "name": "trm/newcms",
-  "version": "1.0.2",
   "description": "NewCMS based on TRMEngine framework",
+  "type": "library",
+  "license": "proprietary",
   "authors": [
     {
       "name": "TRM",
@@ -12,6 +13,15 @@
     "php": ">=8.3.0",
     "trm/trmengine": "^1.0"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github-podvesnoi:kolesnikovsv2018-oss/trm-trmengine.git"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^11.0"
+  },
   "autoload": {
     "psr-4": {
       "NewCMS\\": ""
@@ -19,5 +29,14 @@
     "files": [
       "Libs/GlobalConfig.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "NewCMS\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
   }
 }
+
