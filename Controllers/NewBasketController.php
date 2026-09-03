@@ -35,10 +35,85 @@ class NewBasketController extends BaseController
   private $StatusText;
 
   const EmptyBasketText = "Корзина пуста";
+  /**
+   * интервал между отправками заявок/сообщений через форму корзины, секунды (анти-спам)
+   */
+  const SUBMIT_INTERVAL_SECONDS = 180;
+  /**
+   * ключ в $_SESSION для хранения абсолютного Unix-времени следующей разрешенной отправки
+   */
+  const SESSION_NEXT_SUBMIT_KEY = "NewBasketNextSubmitTime";
 
   private function getOrderRepository(): NewComplexOrderRepository
   {
     return $this->_RM->getRepository(NewComplexOrder::class);
+  }
+
+  /**
+   * стартует PHP-сессию, если она еще не запущена
+   * (обычно сессия уже запущена в NewLoggerMiddleware)
+   */
+  private function ensureSessionStarted(): void
+  {
+    if (session_status() === PHP_SESSION_NONE) {
+      session_start();
+    }
+  }
+
+  /**
+   * @return int - абсолютное Unix-время следующей разрешенной отправки
+   * из сессии пользователя (0 - ограничения нет)
+   */
+  private function getNextSubmitTime(): int
+  {
+    $this->ensureSessionStarted();
+    return isset($_SESSION[self::SESSION_NEXT_SUBMIT_KEY])
+      ? (int)$_SESSION[self::SESSION_NEXT_SUBMIT_KEY]
+      : 0;
+  }
+
+  /**
+   * @return int - сколько секунд осталось до разрешенной отправки (0 - можно отправлять)
+   */
+  private function getRemainingSubmitSeconds(): int
+  {
+    $Remaining = $this->getNextSubmitTime() - time();
+    return ($Remaining > 0) ? $Remaining : 0;
+  }
+
+  /**
+   * устанавливает в сессии время следующей разрешенной отправки
+   * вызывается только после успешной отправки письма!
+   */
+  private function setSubmitLock(): void
+  {
+    $this->ensureSessionStarted();
+    $_SESSION[self::SESSION_NEXT_SUBMIT_KEY] = time() + self::SUBMIT_INTERVAL_SECONDS;
+  }
+
+  /**
+   * отправляет клиенту ответ 429 Too Many Requests
+   * с оставшимся до разрешенной отправки временем
+   *
+   * @param int $RemainingSeconds - оставшееся количество секунд блокировки
+   */
+  private function outputTooManyRequestsResponse(int $RemainingSeconds): void
+  {
+    $TimeString = sprintf("%02d:%02d", intdiv($RemainingSeconds, 60), $RemainingSeconds % 60);
+    $Message = "Слишком частая отправка заявок."
+      . " Повторная отправка будет доступна через " . $TimeString . ".";
+    header("Content-Type: application/json; charset=utf-8", true);
+    header("Retry-After: " . $RemainingSeconds, false);
+    http_response_code(429);
+    echo json_encode(
+      array(
+        "status" => "error",
+        "retryAfter" => $RemainingSeconds,
+        "message" => $Message,
+      ),
+      JSON_UNESCAPED_UNICODE
+    );
+    exit;
   }
 
   function __construct(Request $Request, TRMDIContainer $DIC)
@@ -80,6 +155,9 @@ class NewBasketController extends BaseController
     $this->view->setVarsArray(\GlobalConfig::$ConfigArray);
     $this->view->addCSS(TOPIC . "/css/basket.css", true);
     $this->view->addCSS(TOPIC . "/css/forcatalogpage.css", true);
+    // анти-спам: передаем в шаблон состояние ограничения частоты отправки заявок
+    $this->view->setVar("NextSubmitTime", $this->getNextSubmitTime());
+    $this->view->setVar("SubmitIntervalSeconds", self::SUBMIT_INTERVAL_SECONDS);
 
     return $this->view->render();
   }
@@ -127,6 +205,14 @@ class NewBasketController extends BaseController
     $Message = "";
     $emailaddress = "";
     $this->StatusText = "";
+
+    // анти-спам: ограничение отправки заявок по сессии пользователя
+    // не чаще одного раза в SUBMIT_INTERVAL_SECONDS секунд
+    $RemainingSeconds = $this->getRemainingSubmitSeconds();
+    if ($RemainingSeconds > 0) {
+      $this->outputTooManyRequestsResponse($RemainingSeconds);
+      return;
+    }
 
     if (!$this->CurrentBasket->getGoodsFromCookies()) {
       $this->StatusText = self::EmptyBasketText;
@@ -191,6 +277,10 @@ class NewBasketController extends BaseController
       $email->addMessage($fio);
 
       if ($email->sendEmail()) {
+        // анти-спам: блокировка устанавливается сразу после успешной отправки письма,
+        // до записи заказа в БД, чтобы ошибка БД не позволила отправить письмо повторно
+        $this->setSubmitLock();
+
         $this->StatusText .= "<h3>Заказ успешно отправлен!</h3>"
           . "Через некоторое время вам будет отправлен счет для оплаты на указанный E-mail,"
           . " если возникнут вопросы, с вами свяжутся для уточнения заказа.";
