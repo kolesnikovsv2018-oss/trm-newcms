@@ -16,7 +16,7 @@ class NewArticlesTitlesList
 //protected $Rep;
 
 /**
- * @param \NewCMS\Widgets\NewArticleRepository $Rep - репозиторий для статей
+ * @param \NewCMS\Repositories\NewArticleRepository $Rep - репозиторий для статей
  */
 //public function __construct(NewArticleRepository $Rep)
 //{

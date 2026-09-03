@@ -17,10 +17,3 @@ static protected $IdFieldName = array();
 
 
 } // NewMapDataObject
-
-namespace NewCMS\Libs\MapData;
-
-// Compatibility alias for namespaced usage in legacy code.
-class NewMapDataObject extends \NewCMS\MapData\NewMapDataObject
-{
-}

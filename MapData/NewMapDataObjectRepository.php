@@ -62,10 +62,3 @@ public function setDataMapperArray(array &$DataObjectMap, $DefaultState = TRMDat
 
 
 } // NewMapDataRepository
-
-namespace NewCMS\Libs\MapData;
-
-// Compatibility alias for namespaced usage in legacy code.
-class NewMapDataObjectRepository extends \NewCMS\MapData\NewMapDataObjectRepository
-{
-}

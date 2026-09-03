@@ -6,7 +6,7 @@ use TRMEngine\DataMapper\TRMSafetyFields;
 use TRMEngine\DataObject\Interfaces\TRMDataObjectInterface;
 use TRMEngine\DataObject\Interfaces\TRMDataObjectsCollectionInterface;
 use TRMEngine\DataSource\Interfaces\TRMDataSourceInterface;
-use TRMEngine\Exceptions\TRMMySqlQueryException;
+use TRMEngine\TRMMySqlObject\Exceptions\TRMMySqlQueryException;
 use TRMEngine\Repository\TRMParentedDataObjectRepository;
 
 /**

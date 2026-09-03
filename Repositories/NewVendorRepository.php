@@ -7,7 +7,7 @@ use TRMEngine\DataMapper\TRMDataMapper;
 use TRMEngine\DataObject\Interfaces\TRMDataObjectInterface;
 use TRMEngine\DataSource\Interfaces\TRMDataSourceInterface;
 use TRMEngine\DataSource\TRMSqlDataSource;
-use TRMEngine\Exceptions\TRMMySqlQueryException;
+use TRMEngine\TRMMySqlObject\Exceptions\TRMMySqlQueryException;
 
 /**
  * Репозиторий для работы с производителями

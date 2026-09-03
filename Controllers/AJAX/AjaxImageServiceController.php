@@ -12,7 +12,7 @@ use TRMEngine\Image\TRMImage;
  *
  * @author TRM
  */
-class AjaxImageServiceController // extends \TRMEngine\TRMController
+class AjaxImageServiceController
 {
   /** добавить дату */
   const ADD_DATE = 128;

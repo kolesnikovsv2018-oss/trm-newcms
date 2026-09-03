@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.0.4] - 2026-09-04
+
+### Fixed
+
+- PSR-4-полнота: «вторичные» классы, определённые в чужих файлах (наследие
+  classmap), вынесены в собственные файлы — `Domain/Exceptions/*`
+  (`NewComplectZeroPartPriceException`, `NewComplectWrongQueryException`,
+  `NewArticles*`, `NewProducts*`), `Libs/Logger/Exceptions/*`,
+  `Widgets/GroupCrumbs`, `Widgets/ArticleCrumbs`. Под PSR-4-автозагрузкой
+  Composer часть из них вызывала `Class not found` (например, страница
+  `/price`).
+- `Libs/MapData/NewMapDataObject*` перемещены в PSR-4-локацию `MapData/`
+  (namespace `NewCMS\MapData`), удалены неработающие compatibility-алиасы
+  `NewCMS\Libs\MapData`.
+
+### Added
+
+- `tools/check-classes.php` — gate полноты PSR-4 (все референсы
+  `TRMEngine\*`/`NewCMS\*` обязаны иметь собственный файл); подключён в CI.
+
 ## [1.0.3] - 2026-09-03
 
 ### Added

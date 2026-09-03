@@ -13,20 +13,7 @@ class NewComplectExceptions extends TRMException
     }
 }
 
-class NewComplectWrongQueryException extends NewComplectExceptions
-{
-    public function __construct( $message = "", $code = 0, \Throwable $previous = NULL)
-    {
-        parent::__construct("Запрос вернул ошибку! " . $message, $code, $previous);
-    }
-}
 
-class NewComplectZeroPartPriceException extends NewComplectExceptions
-{
-    public function __construct( $message = "", $code = 0, \Throwable $previous = NULL)
-    {
-        parent::__construct("Для части комплекта не задана цена. "
-                . "Считать полность не имеет смысла! " . $message, $code, $previous);
-    }
-}
+
+
 

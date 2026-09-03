@@ -5,7 +5,7 @@ namespace NewCMS\Repositories;
 use NewCMS\Domain\NewArticle;
 use TRMEngine\DataMapper\TRMDataMapper;
 use TRMEngine\DataSource\Interfaces\TRMDataSourceInterface;
-use TRMEngine\Exceptions\TRMMySqlQueryException;
+use TRMEngine\TRMMySqlObject\Exceptions\TRMMySqlQueryException;
 
 class NewArticleRepository extends NewIdTranslitRepository
 {

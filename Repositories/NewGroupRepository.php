@@ -11,7 +11,7 @@ use TRMEngine\DataObject\Interfaces\TRMDataObjectInterface;
 use TRMEngine\DataObject\Interfaces\TRMDataObjectsCollectionInterface;
 use TRMEngine\DataSource\Interfaces\TRMDataSourceInterface;
 use TRMEngine\DataSource\TRMSqlDataSource;
-use TRMEngine\Exceptions\TRMMySqlQueryException;
+use TRMEngine\TRMMySqlObject\Exceptions\TRMMySqlQueryException;
 use TRMEngine\TRMMySqlObject\TRMMySqlObject;
 
 //******************************************************************************

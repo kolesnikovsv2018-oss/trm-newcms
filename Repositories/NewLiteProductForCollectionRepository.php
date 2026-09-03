@@ -10,7 +10,7 @@ use TRMEngine\DataObject\Interfaces\TRMDataObjectsCollectionInterface;
 use TRMEngine\DataSource\Interfaces\TRMDataSourceInterface;
 use TRMEngine\DataSource\Interfaces\TRMDataSourceSelectQueryBuilderInterface;
 use TRMEngine\DataSource\TRMSqlDataSource;
-use TRMEngine\Exceptions\TRMMySqlQueryException;
+use TRMEngine\TRMMySqlObject\Exceptions\TRMMySqlQueryException;
 
 /**
  * с 2018.07.15 - основной класс для работы с хранилищем коллекции товаров

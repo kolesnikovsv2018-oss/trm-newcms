@@ -2,7 +2,7 @@
 
 namespace NewCMS\Repositories;
 
-use TRMEngine\Exceptions\TRMMySqlQueryException;
+use TRMEngine\TRMMySqlObject\Exceptions\TRMMySqlQueryException;
 use TRMEngine\Repository\TRMDataObjectsContainerRepository;
 
 /**

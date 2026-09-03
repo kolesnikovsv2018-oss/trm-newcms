@@ -29,6 +29,9 @@ jobs:
       - name: PHPUnit
         run: vendor/bin/phpunit
 
+      - name: PSR-4 completeness check
+        run: php tools/check-classes.php .
+
       - name: Architecture gate (no legacy local-copies paths)
         run: |
           if git grep -n 'site/trm' -- '*.php'; then

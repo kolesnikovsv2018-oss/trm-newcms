@@ -7,7 +7,7 @@ use NewCMS\Repositories\NewRepository;
 use TRMEngine\DataMapper\TRMDataMapper;
 use TRMEngine\DataMapper\TRMSafetyFields;
 use TRMEngine\DataSource\Interfaces\TRMDataSourceInterface;
-use TRMEngine\Exceptions\TRMMySqlQueryException;
+use TRMEngine\TRMMySqlObject\Exceptions\TRMMySqlQueryException;
 
 /**
  * TODO(C1-step3, DI-migration): legacy Profile L.
