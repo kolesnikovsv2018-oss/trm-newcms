@@ -34,7 +34,8 @@ function Basket(BasketName) //contactform)
           continue;
         }
         var id    = parts[0].trim();
-        var count = parseInt(parts[1], 10);
+        // количество может быть дробным (метраж м2 на карточках комплектов)
+        var count = parseFloat(String(parts[1]).replace(",", "."));
         if (!id || isNaN(count) || count <= 0) {
           if (typeof NewCMSErrorHandler !== 'undefined') {
             NewCMSErrorHandler.warn('Basket: невалидные данные товара', { id: id, count: count });

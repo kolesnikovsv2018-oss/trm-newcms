@@ -15,7 +15,7 @@ class NewBasketProduct
  */
 public $Item;
 /**
- * @var int - количество товаров ($Item) в корзине
+ * @var float - количество товаров ($Item) в корзине (может быть дробным — метраж м2)
  */
 public $Count;
 
@@ -23,7 +23,7 @@ function __construct($id, $count)
 {
     $this->Item = new NewLiteProductForCollection();
     $this->Item->setId($id);
-    $this->Count = max(0, (int)$count);
+    $this->Count = max(0, (float)str_replace(',', '.', (string)$count));
 }
 
 } // BasketGoods

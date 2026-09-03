@@ -69,7 +69,7 @@ function packingGoods()
     {
             if($i > 0) $this->PackageString .= "|";
 //	формат : артикул1=количество1|артикул2=количество2|артикул3=количество3
-            $this->PackageString .= $this->Goods[$i]->Item->getId()."-".(int)$this->Goods[$i]->Count;
+            $this->PackageString .= $this->Goods[$i]->Item->getId()."-".floatval($this->Goods[$i]->Count);
     }
     return true;
 }
@@ -96,7 +96,8 @@ private function unpackingGoods()
         }
 
         $id = trim((string)$tmpid[0]);
-        $count = (int)$tmpid[1];
+        // количество может быть дробным (метраж м2 на карточках комплектов)
+        $count = (float)str_replace(',', '.', trim((string)$tmpid[1]));
         if ($id === '' || $count <= 0) {
             continue;
         }
