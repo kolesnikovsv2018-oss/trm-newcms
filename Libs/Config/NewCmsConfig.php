@@ -144,4 +144,13 @@ final class NewCmsConfig
     {
         return (string)$this->get('pagination_parameter', 'page');
     }
+
+    /**
+     * Файл с текстами сообщений рассылки (1ps.txt) — контент host-приложения,
+     * задаётся абсолютным путём; пусто — legacy-локация в пакете (OQ-07).
+     */
+    public function getSenderMessageFile(): string
+    {
+        return (string)$this->get('sender_message_file', '');
+    }
 }

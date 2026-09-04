@@ -98,7 +98,8 @@ class NewPagination
   {
     $this->CurrentPage = $CurrentPage;
     if ($this->CountOfArticles / $this->NumOfArticlesPerPage < $CurrentPage) {
-      $this->CurrentPage = ceil($this->CountOfArticles / $this->NumOfArticlesPerPage);
+      // (int): OQ-17 — количество страниц всегда целое
+      $this->CurrentPage = (int)ceil($this->CountOfArticles / $this->NumOfArticlesPerPage);
     }
     if ($this->CurrentPage == 0) {
       $this->CurrentPage = 1;

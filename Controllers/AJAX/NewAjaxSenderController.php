@@ -27,10 +27,12 @@ public function __construct(Request $Request, TRMDIContainer $DIC)
     parent::__construct($Request, $DIC);
     
     $this->Sender = new NewEmailAutoSender( require_once CONFIG . "/emailconfig.php" );
-    // __DIR__ points to .../newcms/Controllers/AJAX in composer vendor layout.
-    // We need package root .../newcms, so parent level is 2.
-    $cmsRoot = defined('FULLWEB') ? FULLWEB : dirname(__DIR__, 2);
-    $this->MessageFileName = rtrim($cmsRoot, '/\\') . '/Libs/1ps.txt';
+    // Путь к файлу сообщений рассылки задаётся host-приложением параметром
+    // sender_message_file (OQ-07); legacy-фолбэк — каталог пакета.
+    $MessageFile = \NewCMS\Libs\Config\NewCmsConfig::current()->getSenderMessageFile();
+    $this->MessageFileName = $MessageFile !== ''
+        ? rtrim($MessageFile, '/\\')
+        : rtrim(dirname(__DIR__, 2), '/\\') . '/Libs/1ps.txt';
 }
 
 /**

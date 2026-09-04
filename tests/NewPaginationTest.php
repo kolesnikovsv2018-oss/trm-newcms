@@ -27,10 +27,8 @@ final class NewPaginationTest extends TestCase
     $Pagination = new NewPagination(100, 30);
     $Pagination->SetCurrentPages(99);
 
-    // ceil(100 / 30) возвращает float — фактическое поведение метода.
-    // Приведение к int — кандидат на доработку в релизе D (типизация).
-    self::assertSame(4.0, $Pagination->CurrentPage);
-    self::assertEquals(4, $Pagination->CurrentPage);
+    // OQ-17 закрыт: количество страниц целое (int)ceil
+    self::assertSame(4, $Pagination->CurrentPage);
   }
 
   public function testSetCurrentPagesZeroBecomesOne(): void
