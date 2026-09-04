@@ -233,7 +233,7 @@ class NewBasketController extends BaseController
           . $this->CurrentBasket->Goods[$i]->Count . " " . $this->CurrentBasket->Goods[$i]->Item->getData("unit", "UnitShort") . "<br>";
       }
 
-      if (isset(\NewCMS\Libs\Config\NewCmsConfig::current()->get('PriceCheck'))) {
+      if (\NewCMS\Libs\Config\NewCmsConfig::current()->get('PriceCheck') !== null) {
         $Message .= "На сумму <b>" . $this->CurrentBasket->calculateSumm() . "</b> руб.<br>";
         header("X-PriceCheck: 1");
       }
