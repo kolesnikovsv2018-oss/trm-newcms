@@ -11,7 +11,7 @@
   ],
   "require": {
     "php": ">=8.3.0",
-    "trm/trmengine": "^1.0"
+    "trm/trmengine": "^2.0"
   },
   "repositories": [
     {

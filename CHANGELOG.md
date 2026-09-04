@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.0.0] - 2026-09-04
+
+### Changed
+
+- Зависимость: `trm/trmengine ^2.0` (EngineConfig: параметры debug/fastcgi/
+  error-log вместо константы DEBUG и getenv в движке).
+- **Configuration API**: `NewCmsExtension` + `NewCmsConfig` — параметры
+  host-приложения вместо чтения файлов пакетом; 134 потребителя переведены
+  с `GlobalConfig::$ConfigArray` на `NewCmsConfig::current()`
+  (dual-mode: легаси-хранилище заполняется из параметров).
+- Host-константы `ROOT`/`TOPIC`/`PAGE_NUMERIC_NAME` удалены из кода пакета
+  (theme-пути — `NewCMSPathResolver`, project root и пагинация — Config).
+- `Libs/MapData` перемещены в PSR-4-локацию `MapData/`.
+
+### Removed
+
+- Чтение файлов конфигурации пакетом (config-файл — обязанность host);
+  `autoload.files` сохраняет только `GlobalConfig.php` (легаси-хранилище)
+  до финала 2.0.
+
 ## [1.0.5] - 2026-09-04
 
 ### Fixed
