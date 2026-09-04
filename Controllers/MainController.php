@@ -65,16 +65,16 @@ class MainController extends BaseController
     }
 
     $GroupRep = $this->getNewGroupRepository();
-    $GroupRep->setCurrentGroupId(\GlobalConfig::$ConfigArray["StartGroup"]);
+    $GroupRep->setCurrentGroupId(\NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup'));
     $GroupRep->setOrderBy();
     $GroupRep->setPresentFlagCondition();
     $GroupList = $GroupRep->getAll();
 
-    $Title = ucfirst(\GlobalConfig::$ConfigArray["CommonTitle"]);
-    $PageTitle = $Title . " - " . \GlobalConfig::$ConfigArray["SiteName"];
-    $Description = \GlobalConfig::$ConfigArray["CommonDescription"];
+    $Title = ucfirst(\NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonTitle'));
+    $PageTitle = $Title . " - " . \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName');
+    $Description = \NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonDescription');
 
-    $this->setSEO($PageTitle, $Description, \GlobalConfig::$ConfigArray["CommonKeyWords"]);
+    $this->setSEO($PageTitle, $Description, \NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonKeyWords'));
     $this->view->setCanonical($this->buildAbsoluteUrl("/"));
     $this->setTwitterCard("summary_large_image", array(
       "title" => $PageTitle,
@@ -83,7 +83,7 @@ class MainController extends BaseController
     ));
     $this->addWebSiteJsonLd(array(
       "url" => $this->buildAbsoluteUrl("/"),
-      "name" => \GlobalConfig::$ConfigArray["SiteName"],
+      "name" => \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName'),
       "potentialAction" => array(
         "@type" => "SearchAction",
         "target" => $this->buildAbsoluteUrl("/search?SearchText={search_term_string}"),
@@ -100,8 +100,8 @@ class MainController extends BaseController
 
   public function actionAbout()
   {
-    $Title = "О компании " . \GlobalConfig::$ConfigArray["CompanyName"];
-    $Description = "Информация о компании " . \GlobalConfig::$ConfigArray["CompanyName"] . ", поставке подвесных потолков и комплектующих.";
+    $Title = "О компании " . \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName');
+    $Description = "Информация о компании " . \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName') . ", поставке подвесных потолков и комплектующих.";
 
     $this->setSEO($Title, $Description, $Title);
     $this->view->setMeta("robots", "INDEX,FOLLOW");
@@ -125,10 +125,10 @@ class MainController extends BaseController
 
   public function actionContacts()
   {
-    $Title = \GlobalConfig::$ConfigArray["CompanyName"] . " - контакты";
-    $Description = \GlobalConfig::$ConfigArray["CompanyName"] . " - контакты, схема проезда, реквизиты";
+    $Title = \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName') . " - контакты";
+    $Description = \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName') . " - контакты, схема проезда, реквизиты";
 
-    $this->setSEO($Title, $Description, \GlobalConfig::$ConfigArray["CompanyName"] . ", контакты, реквизиты");
+    $this->setSEO($Title, $Description, \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName') . ", контакты, реквизиты");
     $this->view->setMeta("robots", "INDEX,FOLLOW");
     $this->view->setCanonical($this->buildAbsoluteUrl("/contacts"));
     $this->setTwitterCard("summary", array(
@@ -144,15 +144,15 @@ class MainController extends BaseController
     $this->addJsonLd(array(
       '@context' => 'https://schema.org',
       '@type' => 'LocalBusiness',
-      'name' => \GlobalConfig::$ConfigArray['CompanyName'],
+      'name' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName'),
       'url' => $this->buildAbsoluteUrl('/contacts'),
-      'email' => \GlobalConfig::$ConfigArray['email'],
-      'telephone' => \GlobalConfig::$ConfigArray['tel'],
+      'email' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('email'),
+      'telephone' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('tel'),
       'address' => array(
         '@type' => 'PostalAddress',
-        'streetAddress' => \GlobalConfig::$ConfigArray['CompanyAddress'],
-        'addressLocality' => \GlobalConfig::$ConfigArray['CompanyCity'],
-        'postalCode' => \GlobalConfig::$ConfigArray['PostalCode'],
+        'streetAddress' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyAddress'),
+        'addressLocality' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyCity'),
+        'postalCode' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('PostalCode'),
         'addressCountry' => 'RU',
       ),
     ));
@@ -164,10 +164,10 @@ class MainController extends BaseController
 
   public function actionAgreement()
   {
-    $Title = "Пользовательское соглашение " . \GlobalConfig::$ConfigArray["CompanyName"];
-    $Description = \GlobalConfig::$ConfigArray["CompanyName"] . " - пользовательское соглашение";
+    $Title = "Пользовательское соглашение " . \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName');
+    $Description = \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName') . " - пользовательское соглашение";
 
-    $this->setSEO($Title, $Description, \GlobalConfig::$ConfigArray["CompanyName"] . ", пользовательское соглашение");
+    $this->setSEO($Title, $Description, \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName') . ", пользовательское соглашение");
     $this->view->setMeta("robots", "NOINDEX,NOFOLLOW");
     $this->view->setCanonical($this->buildAbsoluteUrl("/agreement"));
     $this->addWebPageJsonLd(array(
@@ -208,7 +208,7 @@ class MainController extends BaseController
     $filters = $this->Request->query->get("filters");
 
     if (empty($param)) {
-      $Group = $GroupRepository->getById(\GlobalConfig::$ConfigArray["StartGroup"]);
+      $Group = $GroupRepository->getById(\NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup'));
       if (!$Group && $PresentGroupsCount === 1) {
         $SingleGroupResult = $this->getDBObject()->query("SELECT `ID_group` FROM `group` WHERE `GroupPresent`=1 ORDER BY `ID_group` ASC LIMIT 1");
         if ($SingleGroupResult) {
@@ -237,9 +237,9 @@ class MainController extends BaseController
     }
 
     $GroupId = intval($Group->getId());
-    $Canonical = "/" . trim(\GlobalConfig::$ConfigArray["pricePrefix"], "/\\");
+    $Canonical = "/" . trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('pricePrefix'), "/\\");
 
-    if ($GroupId !== \GlobalConfig::$ConfigArray["StartGroup"]) {
+    if ($GroupId !== \NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup')) {
       $Canonical .= "/" . $Group->getTranslit();
     }
 
@@ -247,8 +247,8 @@ class MainController extends BaseController
 
     $Title = $OriginalTitle . " - цены";
     $KeyWords = $OriginalTitle . " цены";
-    if ($Group->getId() == \GlobalConfig::$ConfigArray["GlobalStartGroup"]) {
-      $Description = \GlobalConfig::$ConfigArray["CommonDescription"] . ". " . $Group["group"]["GroupTitle"];
+    if ($Group->getId() == \NewCMS\Libs\Config\NewCmsConfig::current()->get('GlobalStartGroup')) {
+      $Description = \NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonDescription') . ". " . $Group["group"]["GroupTitle"];
     } else if (!$Group["group"]["GroupPresent"]) {
       $Description = "";
     } else {
@@ -276,7 +276,7 @@ class MainController extends BaseController
         }
 
         if ($GroupProductsCount === 0) {
-          $Canonical = "/" . trim(\GlobalConfig::$ConfigArray["pricePrefix"], "/\\");
+          $Canonical = "/" . trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('pricePrefix'), "/\\");
           $Title = $OriginalTitle . " - цены";
 
           $this->setSEO(
@@ -328,7 +328,7 @@ class MainController extends BaseController
       $ProductsListRepository->setFeaturesList($FeaturesSelector->SelectedFeaturesList);
     }
 
-    $NumOfGoods = \GlobalConfig::$ConfigArray["PaginationCount"];
+    $NumOfGoods = \NewCMS\Libs\Config\NewCmsConfig::current()->get('PaginationCount');
 
     // с какой позиции и сколько выбираем из БД
     $ProductsListRepository->setLimit($NumOfGoods, ($this->page - 1) * $NumOfGoods);
@@ -566,7 +566,7 @@ class MainController extends BaseController
     }
 
     $Canonical = "/"
-      . trim(\GlobalConfig::$ConfigArray["catalogPrefix"], "/\\")
+      . trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('catalogPrefix'), "/\\")
       . "/" . $LiteProduct["table1"]["PriceTranslit"]; // $_SERVER["REQUEST_URI"];
 
     //--------------------------- CRUMBS -------------------------------------------------------------
@@ -586,13 +586,13 @@ class MainController extends BaseController
 
     //описание для страницы мета тег!!!
     $Price = null;
-    if (\GlobalConfig::$ConfigArray["PriceColumnCount"] == 1) {
+    if (\NewCMS\Libs\Config\NewCmsConfig::current()->get('PriceColumnCount') == 1) {
       $Price = $LiteProduct->getData("table1", "Price3");
     }
-    if (\GlobalConfig::$ConfigArray["PriceColumnCount"] == 2) {
+    if (\NewCMS\Libs\Config\NewCmsConfig::current()->get('PriceColumnCount') == 2) {
       $Price = $LiteProduct->getData("table1", "Price2");
     }
-    if (\GlobalConfig::$ConfigArray["PriceColumnCount"] == 3) {
+    if (\NewCMS\Libs\Config\NewCmsConfig::current()->get('PriceColumnCount') == 3) {
       $Price = $LiteProduct->getData("table1", "Price1");
     }
 
@@ -633,7 +633,7 @@ class MainController extends BaseController
     $ProductTitle = htmlspecialchars($LiteProduct["table1"]["Name"]);
     $ProductImage = "";
     if (strlen(trim($LiteProduct["table1"]["Image"] ?? "")) > 0) {
-      $ProductImage = "/" . trim(\GlobalConfig::$ConfigArray["ImageCatalog"], "/") . "/" . $LiteProduct["table1"]["Image"] . ".jpg";
+      $ProductImage = "/" . trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('ImageCatalog'), "/") . "/" . $LiteProduct["table1"]["Image"] . ".jpg";
     }
 
     $this->setSEO($ProductTitle, htmlspecialchars($Description), str_replace(array("\"", "\'", "<", ">", "(", ")", "{", "}", "[", "]", ".", ","), " ", $KeyWords));
@@ -722,7 +722,7 @@ class MainController extends BaseController
     if (!$MyComplect1) {
       throw new NewProductsWrongIdExceptions("Не удалось получить данные товара [" . $param . "] !", 404);
     }
-    return new RedirectResponse(\GlobalConfig::$ConfigArray["catalogPrefix"] . "/" . $MyComplect1["table1"]["PriceTranslit"], 301);
+    return new RedirectResponse(\NewCMS\Libs\Config\NewCmsConfig::current()->get('catalogPrefix') . "/" . $MyComplect1["table1"]["PriceTranslit"], 301);
   }
 
   /**
@@ -743,6 +743,6 @@ class MainController extends BaseController
     if (!$Group) {
       throw new NewGroupWrongNumberException("Не удалось получить данные для группы [" . $param . "] !", 404);
     }
-    return new RedirectResponse(\GlobalConfig::$ConfigArray["pricePrefix"] . "/" . $Group["group"]["GroupTranslit"], 301);
+    return new RedirectResponse(\NewCMS\Libs\Config\NewCmsConfig::current()->get('pricePrefix') . "/" . $Group["group"]["GroupTranslit"], 301);
   }
 } // MainController

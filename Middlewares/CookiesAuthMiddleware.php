@@ -24,7 +24,7 @@ protected $DBO;
 public function __construct(TRMMySqlObject $DBO)
 {
     parent::__construct( 
-            \GlobalConfig::$ConfigArray["AuthCookieName"], // имя Cookie-фйла для авторизации
+            \NewCMS\Libs\Config\NewCmsConfig::current()->get('AuthCookieName'), // имя Cookie-фйла для авторизации
             "/login", // адрес , по которому перенаправляется не авторизованный пользоватьель
             "originating_uri"); // имя аргумента GET-запроса, в котором сохраняется исходный URI
     $this->DBO = $DBO;

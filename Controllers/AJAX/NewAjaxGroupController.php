@@ -129,8 +129,8 @@ public function actionUpdateComplexGroup()
     $rep->doUpdate();
     $MyCache = $this->DIC->get(TRMCache::class);
     $MyCache->clearCache("catalogmenu0");
-    $MyCache->clearCache("catalogmenu" . \GlobalConfig::$ConfigArray["StartGroup"]);
-    $MyCache->clearCache("catalogmenu" . \GlobalConfig::$ConfigArray["GlobalStartGroup"]);
+    $MyCache->clearCache("catalogmenu" . \NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup'));
+    $MyCache->clearCache("catalogmenu" . \NewCMS\Libs\Config\NewCmsConfig::current()->get('GlobalStartGroup'));
 
     $this->renderComplexGroupJSON($ComplexGroup);
 }

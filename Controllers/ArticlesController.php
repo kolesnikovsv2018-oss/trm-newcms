@@ -2,7 +2,6 @@
 
 namespace NewCMS\Controllers;
 
-use GlobalConfig;
 use NewCMS\Domain\Exceptions\NewArticlesEmptyCollectionExceptions;
 use NewCMS\Domain\Exceptions\NewArticlesExceptions;
 use NewCMS\Domain\Exceptions\NewArticlesWrongTypeExceptions;
@@ -34,7 +33,7 @@ class ArticlesController extends BaseController
 
   public function actionRal()
   {
-    $Title = "Таблица цветов RAL - " . GlobalConfig::$ConfigArray["SiteName"];
+    $Title = "Таблица цветов RAL - " . \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName');
     $Description = "Шкала цветов RAL, применяется при покраске металлических подвесных потолков";
 
     $this->setSEO($Title, $Description, "цвет RAL покраска потолка");
@@ -80,7 +79,7 @@ class ArticlesController extends BaseController
     $Rep = $this->getNewVendorRepository();
 
     $CountOfArticles = $Rep->getCountOfVendors();
-    $NumOfArticles = GlobalConfig::$ConfigArray["NumArticlesPerPage"];
+    $NumOfArticles = \NewCMS\Libs\Config\NewCmsConfig::current()->get('NumArticlesPerPage');
 
     $MyPaginationClass = new NewPagination($CountOfArticles, $NumOfArticles);
     $MyPaginationClass->SetCurrentPageFromURI();
@@ -100,7 +99,7 @@ class ArticlesController extends BaseController
       );
     }
 
-    $Title = "Торговые марки и производители - " . GlobalConfig::$ConfigArray["SiteName"];
+    $Title = "Торговые марки и производители - " . \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName');
     $Description = "Торговые марки и производители подвесных потолков, светильников и комплектующих";
     $Canonical = "/" . strtolower($this->CurrentActionName);
 
@@ -141,7 +140,7 @@ class ArticlesController extends BaseController
     }
     // иначе текущий префикс включает общий префикс для документов
     else {
-      $this->CurrentURL = trim(GlobalConfig::$ConfigArray["articlesListPrefix"], "\\/") . "/" . $DocType;
+      $this->CurrentURL = trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('articlesListPrefix'), "\\/") . "/" . $DocType;
     }
   }
 
@@ -169,8 +168,8 @@ class ArticlesController extends BaseController
     $this->view->setViewName("articlestypelist");
 
     $Title = "Информационные разделы";
-    $Description = "Информационные разделы сайта " . GlobalConfig::$ConfigArray["SiteName"];
-    $Canonical = "/" . GlobalConfig::$ConfigArray["articlesListPrefix"];
+    $Description = "Информационные разделы сайта " . \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName');
+    $Canonical = "/" . \NewCMS\Libs\Config\NewCmsConfig::current()->get('articlesListPrefix');
 
     $this->setSEO($Title, $Description, $Title);
     $this->view->setCanonical($this->buildAbsoluteUrl($Canonical));
@@ -218,7 +217,7 @@ class ArticlesController extends BaseController
     $ArticlesListRepository = $this->getNewArticleRepository();
 
     $CountOfArticles = $ArticlesListRepository->getCountOfArticlesForUri($DocType);
-    $NumOfArticles = GlobalConfig::$ConfigArray["NumArticlesPerPage"];
+    $NumOfArticles = \NewCMS\Libs\Config\NewCmsConfig::current()->get('NumArticlesPerPage');
 
     $MyPaginationClass = new NewPagination($CountOfArticles, $NumOfArticles);
     $MyPaginationClass->SetCurrentPageFromURI();
@@ -243,8 +242,8 @@ class ArticlesController extends BaseController
     } else {
       //        $ArticleType = $MyArticlesList[0]["articlestype"]["ID_articlestype"]; // ->getFirstArticleType();
       //        $ArticleTypeName = $MyArticlesList[0]["articlestype"]["ArticlesTypeName"]; // ->getFirstArticleTypeName();
-      $Title = GlobalConfig::$ConfigArray["SiteName"] . " - {$ArticleTypeName}, страница " . $this->page;
-      $Description = GlobalConfig::$ConfigArray["SiteName"] . " - "
+      $Title = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName') . " - {$ArticleTypeName}, страница " . $this->page;
+      $Description = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName') . " - "
         . $MyArticlesList[0]["articlestype"]["Comment"];
     }
 
@@ -359,7 +358,7 @@ class ArticlesController extends BaseController
       "datePublished" => $ArticleDate ?: null,
       "dateModified" => $ArticleDate ?: null,
       "authorName" => $ArticleAuthor ?: null,
-      "publisherName" => GlobalConfig::$ConfigArray["CompanyName"],
+      "publisherName" => \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName'),
       "publisherLogoUrl" => $this->buildAbsoluteUrl(TOPIC . "/images/logo1.gif"),
       "url" => $this->buildAbsoluteUrl($CanonicalLink),
     ));
@@ -406,7 +405,7 @@ class ArticlesController extends BaseController
   //   // getArticlesTypeName - устаревший метод, его уже нигде нет в проекте
   //   $ArticleTypeName = $MyArticle->getArticlesTypeName();
 
-  //   $Response = new RedirectResponse(GlobalConfig::$ConfigArray["articlesListPrefix"] . "/{$ArticleTypeName}/" . $MyArticle->ArticleURL, 301);
+  //   $Response = new RedirectResponse(\NewCMS\Libs\Config\NewCmsConfig::current()->get('articlesListPrefix') . "/{$ArticleTypeName}/" . $MyArticle->ArticleURL, 301);
 
   //   return $Response;
   // }
@@ -471,7 +470,7 @@ class ArticlesController extends BaseController
       $CurrentURLPrefix = "/{$row0['ArticlesURL']}";
     } else {
       $CurrentURLPrefix = "/"
-        . trim(GlobalConfig::$ConfigArray["articlesListPrefix"], "/\\")
+        . trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('articlesListPrefix'), "/\\")
         . "/{$row0['ArticlesURL']}";
     }
 

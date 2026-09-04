@@ -136,7 +136,7 @@ public function translit()
         TRMLib::translit( 
             $this->getData(static::$TitleFieldName[0], static::$TitleFieldName[1]), 
             true, 
-            \GlobalConfig::$ConfigArray["Charset"] ) 
+            \NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset') ) 
     );
 }
 

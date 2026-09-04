@@ -25,10 +25,10 @@ public function __construct(Request $Request, TRMDIContainer $DIC)
 {
     parent::__construct(
         $Request,
-        \GlobalConfig::$ConfigArray["AuthCookieName"], // имя Cookie-фйла для авторизации
+        \NewCMS\Libs\Config\NewCmsConfig::current()->get('AuthCookieName'), // имя Cookie-фйла для авторизации
         "/login", // адрес , по которому перенаправляется не авторизованный пользоватьель
         self::$OriginatingUriArgName, // имя аргумента GET-запроса, в котором сохраняется исходный URI
-        \GlobalConfig::$ConfigArray["AdminFolder"]  // адрес, на который произойдет переадресация авторизованного пользователя,
+        \NewCMS\Libs\Config\NewCmsConfig::current()->get('AdminFolder')  // адрес, на который произойдет переадресация авторизованного пользователя,
     );                                             // если не задан self::$OriginatingUriArgName
     $this->DIC = $DIC;
 }
@@ -177,7 +177,7 @@ public function renderLoginView()
 
 //header("x-id:" . $_SESSION["id"] );
     $this->view = new CMSBaseView(null, null); // new ArticlesBaseView($this);
-    $this->view->setVarsArray(\GlobalConfig::$ConfigArray);
+    $this->view->setVarsArray(\NewCMS\Libs\Config\NewCmsConfig::current()->getRaw());
     $this->view->setVar( $this->OriginatingUriArgumentName, $uri );
     $this->view->setVar("UserName", $name);
 //    $this->view->setVar("x_id", $_SESSION["id"]);

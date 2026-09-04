@@ -18,15 +18,15 @@ class GroupCrumbs extends TRMCrumbs
     $this->TitleField = "GroupTitle";
     $this->URLField = "GroupTranslit";
 
-    $this->FirstTitle = \GlobalConfig::$ConfigArray["SiteName"]; //"Подвесной.РУ";
-    $this->FirstLink = "/"; // \GlobalConfig::$ConfigArray["CommonURL"]; //"https://www.podvesnoi.ru/";
+    $this->FirstTitle = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName'); //"Подвесной.РУ";
+    $this->FirstLink = "/"; // \NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonURL'); //"https://www.podvesnoi.ru/";
 
-    $this->URLPrefix = "/" . trim(\GlobalConfig::$ConfigArray["pricePrefix"], "/");
+    $this->URLPrefix = "/" . trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('pricePrefix'), "/");
   }
 
   public function __toString()
   {
-    $StartGroupId = intval(\GlobalConfig::$ConfigArray["StartGroup"]);
+    $StartGroupId = intval(\NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup'));
     foreach ($this->Crumbs as $Key => $Crumb) {
       if (
         isset($Crumb[$this->IdField]) &&

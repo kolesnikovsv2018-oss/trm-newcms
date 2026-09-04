@@ -93,7 +93,7 @@ TRMLib::ip($this->Request->server->get("REQUEST_SCHEME") );
     $TestContainer->printTest();
     
     $russtr = "  <div>Новая  строка с русскими буквами для конвертации, размер - (500х700х12) мм!!! </div>";
-    echo TRMLib::translit( $russtr, true, \GlobalConfig::$ConfigArray["Charset"] );
+    echo TRMLib::translit( $russtr, true, \NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset') );
     
     $arr3 = array();
     $arr3["one_key"] = "Hello!!!";

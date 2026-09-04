@@ -16,7 +16,7 @@ abstract class AuthController extends TRMController
   function __construct(Request $Request)
   {
     try {
-      $cookie = new TRMAuthCookie(\GlobalConfig::$ConfigArray["AuthCookieName"] ?? "auth");
+      $cookie = new TRMAuthCookie(\NewCMS\Libs\Config\NewCmsConfig::current()->get('AuthCookieName') ?? "auth");
       if ($cookie) {
         $cookie->validate();
         parent::__construct($Request);

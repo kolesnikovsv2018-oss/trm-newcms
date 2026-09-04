@@ -90,7 +90,7 @@ class NewPrestigeProducts
   {
     $this->ProducstRepository->clearCondition();
     if (!$this->GroupId) {
-      $this->setGroupId(\GlobalConfig::$ConfigArray["StartGroup"]);
+      $this->setGroupId(\NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup'));
     }
     $this->ProducstRepository->setSubGroupsFlag();
     $this->ProducstRepository->setCurrentGroupId($this->GroupId);

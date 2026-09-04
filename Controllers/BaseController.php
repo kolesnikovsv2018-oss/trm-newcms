@@ -27,7 +27,7 @@ abstract class BaseController extends NewController
     if (!is_dir($this->view->getPathToViews())) {
       throw new TRMControllerNotFoundedException("Не найден вид [{$this->view->getPathToViews()}] !", 404);
     }
-    //    $this->view->setVarsArray(\GlobalConfig::$ConfigArray);
+    //    $this->view->setVarsArray(\NewCMS\Libs\Config\NewCmsConfig::current()->getRaw());
     $this->view->setViewName(strtolower($this->CurrentActionName));
   }
 
@@ -135,7 +135,7 @@ abstract class BaseController extends NewController
 
   protected function buildAbsoluteUrl(string $path = ''): string
   {
-    $BaseUrl = rtrim((string)(\GlobalConfig::$ConfigArray['CommonURL'] ?? ''), '/');
+    $BaseUrl = rtrim((string)(\NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonURL') ?? ''), '/');
 
     if ($BaseUrl === '') {
       $ServerName = trim((string)filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_URL), "/\\");
@@ -156,22 +156,22 @@ abstract class BaseController extends NewController
     return array(
       '@context' => 'https://schema.org',
       '@type' => 'Organization',
-      'name' => \GlobalConfig::$ConfigArray['CompanyName'],
+      'name' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName'),
       'url' => $this->buildAbsoluteUrl('/'),
       'logo' => $this->buildAbsoluteUrl(TOPIC . '/images/logo1.gif'),
-      'email' => \GlobalConfig::$ConfigArray['email'],
-      'telephone' => \GlobalConfig::$ConfigArray['tel'],
+      'email' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('email'),
+      'telephone' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('tel'),
       'address' => array(
         '@type' => 'PostalAddress',
-        'streetAddress' => \GlobalConfig::$ConfigArray['CompanyAddress'],
-        'addressLocality' => \GlobalConfig::$ConfigArray['CompanyCity'],
-        'postalCode' => \GlobalConfig::$ConfigArray['PostalCode'],
+        'streetAddress' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyAddress'),
+        'addressLocality' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyCity'),
+        'postalCode' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('PostalCode'),
         'addressCountry' => 'RU',
       ),
       'contactPoint' => array(
         '@type' => 'ContactPoint',
-        'telephone' => \GlobalConfig::$ConfigArray['tel'],
-        'email' => \GlobalConfig::$ConfigArray['email'],
+        'telephone' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('tel'),
+        'email' => \NewCMS\Libs\Config\NewCmsConfig::current()->get('email'),
         'contactType' => 'sales',
         'availableLanguage' => 'ru',
       ),

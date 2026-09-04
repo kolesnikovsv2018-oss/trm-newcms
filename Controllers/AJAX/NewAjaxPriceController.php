@@ -17,9 +17,9 @@ public function actionAjaxGetPrice()
     $StartGroup = $this->Request->getContent(); //file_get_contents('php://input');
     if(!$StartGroup)
     {
-        $StartGroup = \GlobalConfig::$ConfigArray["StartGroup"];
+        $StartGroup = \NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup');
     }
-    $filename = ROOT . "/" . \GlobalConfig::$ConfigArray["pricefilename"];
+    $filename = ROOT . "/" . \NewCMS\Libs\Config\NewCmsConfig::current()->get('pricefilename');
 
     $price = new NewPrice(
             $StartGroup, 
@@ -34,7 +34,7 @@ public function actionAjaxGetPrice()
         echo json_encode(
                 $this->Request->server->get("REQUEST_SCHEME") . "://"
                 . $this->Request->server->get("SERVER_NAME") 
-                . "/" . ltrim(\GlobalConfig::$ConfigArray["pricefilename"], "/\\"));
+                . "/" . ltrim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('pricefilename'), "/\\"));
     }
     else { echo "Ошибка получения прайс-листа для группы {$StartGroup}!"; }
 }
@@ -49,7 +49,7 @@ public function actionAjaxPutPrice()
     $simplefilename = $this->Request->files->get('PriceFile')->getPathName();
 
     $price = new NewPrice(
-            \GlobalConfig::$ConfigArray["StartGroup"], 
+            \NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup'), 
             $this->getDBObject() ,
             $this->_RM->getRepository(NewLiteProductForCollection::class)
         );

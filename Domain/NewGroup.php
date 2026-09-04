@@ -129,7 +129,7 @@ class NewGroup extends NewIdTranslitDataObject
       $this->setData(
         static::$TranslitFieldName[0],
         static::$TranslitFieldName[1],
-        TRMLib::translit($this->GroupFullTitle, true, \GlobalConfig::$ConfigArray["Charset"])
+        TRMLib::translit($this->GroupFullTitle, true, \NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset'))
       );
     } else {
       parent::translit();

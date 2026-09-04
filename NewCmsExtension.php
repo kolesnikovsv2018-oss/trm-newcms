@@ -39,6 +39,9 @@ final class NewCmsExtension
      */
     public function register(): void
     {
+        // текущая типизированная конфигурация (для NewCmsConfig::current())
+        NewCmsConfig::setCurrent($this->Config);
+
         // легаси-хранилище (потребители 1.x) — заполняется из параметров
         \GlobalConfig::setArray($this->Config->getRaw());
 

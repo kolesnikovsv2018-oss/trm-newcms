@@ -73,7 +73,7 @@ class AjaxImageServiceController
   {
     $RandomPostFixFlag = $this->Request->request->getBoolean("RandomPostFixFlag", false);
 
-    $FullPathArray = $this->uploadFile(\GlobalConfig::$ConfigArray["UploadImageFolder"], $RandomPostFixFlag);
+    $FullPathArray = $this->uploadFile(\NewCMS\Libs\Config\NewCmsConfig::current()->get('UploadImageFolder'), $RandomPostFixFlag);
     if (empty($FullPathArray)) {
       $this->exitOnLoadError();
     }
@@ -91,7 +91,7 @@ class AjaxImageServiceController
    */
   public function actionCkEditor5UploadImage()
   {
-    $FullPathArray = $this->uploadFile(\GlobalConfig::$ConfigArray["UploadImageFolder"], true);
+    $FullPathArray = $this->uploadFile(\NewCMS\Libs\Config\NewCmsConfig::current()->get('UploadImageFolder'), true);
     if (empty($FullPathArray)) {
       $this->exitOnLoadError();
     }
@@ -121,8 +121,8 @@ class AjaxImageServiceController
    */
   public function actionUploadCatalogImage()
   {
-    $this->MinW = \GlobalConfig::$ConfigArray["ProductPreviewMaxW"];
-    $this->MinH = \GlobalConfig::$ConfigArray["ProductPreviewMaxH"];
+    $this->MinW = \NewCMS\Libs\Config\NewCmsConfig::current()->get('ProductPreviewMaxW');
+    $this->MinH = \NewCMS\Libs\Config\NewCmsConfig::current()->get('ProductPreviewMaxH');
 
     $FullPathArray = $this->uploadCatalogImage();
     if (empty($FullPathArray)) {
@@ -143,8 +143,8 @@ class AjaxImageServiceController
    */
   public function actionUploadGroupImage()
   {
-    $this->MinW = \GlobalConfig::$ConfigArray["GroupPreviewMaxW"];
-    $this->MinH = \GlobalConfig::$ConfigArray["GroupPreviewMaxH"];
+    $this->MinW = \NewCMS\Libs\Config\NewCmsConfig::current()->get('GroupPreviewMaxW');
+    $this->MinH = \NewCMS\Libs\Config\NewCmsConfig::current()->get('GroupPreviewMaxH');
 
     $FullPathArray = $this->uploadGroupImage();
     if (empty($FullPathArray)) {
@@ -188,8 +188,8 @@ class AjaxImageServiceController
     header("Content-type: application/json; charset=utf-8");
 
     // для отладки...
-    if (strtolower(\GlobalConfig::$ConfigArray["Charset"]) !== $DefaultCharset) {
-      $FullPathArray[] = TRMLib::conv($this->Message, \GlobalConfig::$ConfigArray["Charset"], $DefaultCharset);
+    if (strtolower(\NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset')) !== $DefaultCharset) {
+      $FullPathArray[] = TRMLib::conv($this->Message, \NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset'), $DefaultCharset);
     } else {
       $FullPathArray[] = $this->Message;
     }
@@ -305,7 +305,7 @@ class AjaxImageServiceController
     $NameWithoutExt = str_replace("." . $Ext, "", $this->UploadFile->getClientOriginalName());
     $NameWithoutExt .= '-' . sprintf("%'.09d", rand(0, 999999999));
 
-    $CatalogName = trim(\GlobalConfig::$ConfigArray["ImageCatalog"], "\\/");
+    $CatalogName = trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('ImageCatalog'), "\\/");
     // папка в которую загружается файл на сервере, без закрывающего /
     if (!$this->generateGIFAndJPGImage(
       $NameWithoutExt,
@@ -322,7 +322,7 @@ class AjaxImageServiceController
   /**
    * сохраняет, переданный в форме через POST, 
    * файл на сервере в двух размерах в папке для картинок групп
-   * (в данной версии в \GlobalConfig::$ConfigArray["GroupImagesCatalog"])
+   * (в данной версии в \NewCMS\Libs\Config\NewCmsConfig::current()->get('GroupImagesCatalog'))
    * к имени файла в конец добавляются случайные 9 цифр
    * 
    * @return array - array($CatalogName, $NameWithoutExt, $SmallPrefix . $NameWithoutExt, $Ext)
@@ -342,7 +342,7 @@ class AjaxImageServiceController
     $NameWithoutExt = str_replace("." . $Ext, "", $this->UploadFile->getClientOriginalName());
     $NameWithoutExt .= '-' . sprintf("%'.09d", rand(0, 999999999));
 
-    $CatalogName = trim(\GlobalConfig::$ConfigArray["GroupImagesCatalog"], "\\/");
+    $CatalogName = trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('GroupImagesCatalog'), "\\/");
 
     // папка в которую загружается файл на сервере, без закрывающего /
     if (!$this->generateSmallAndNormalImage(

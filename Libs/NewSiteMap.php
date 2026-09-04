@@ -150,7 +150,7 @@ class NewSiteMap extends TRMState
    */
   public function generateSiteMapsArticles($priority = "0.5", $changefreq = "yearly")
   {
-    $articlesListPrefix = trim(\GlobalConfig::$ConfigArray["articlesListPrefix"], "\//");
+    $articlesListPrefix = trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('articlesListPrefix'), "\//");
 
     $result = $this->DBO->query("
         SELECT `ArticleURL`, `ArticlesURL` 
@@ -203,7 +203,7 @@ class NewSiteMap extends TRMState
    */
   public function generateSiteMapsGroup($priority = "0.6", $changefreq = "yearly")
   {
-    $pricePrefix = \GlobalConfig::$ConfigArray["pricePrefix"];
+    $pricePrefix = \NewCMS\Libs\Config\NewCmsConfig::current()->get('pricePrefix');
 
     $result = $this->DBO->query("SELECT GroupTranslit FROM `group` WHERE `GroupPresent`=1");
 
@@ -235,7 +235,7 @@ class NewSiteMap extends TRMState
    */
   public function generateSiteMapsPrice()
   {
-    $catalogPrefix = \GlobalConfig::$ConfigArray["catalogPrefix"];
+    $catalogPrefix = \NewCMS\Libs\Config\NewCmsConfig::current()->get('catalogPrefix');
 
     //получим самый посещаемый товар из БД
     $result = $this->DBO->query("SELECT MAX(Visits) FROM `table1` WHERE `present`=1");

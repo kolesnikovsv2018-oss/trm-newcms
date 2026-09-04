@@ -28,7 +28,7 @@ class NewAjaxMenuJSONController extends NewAjaxCommonController
     if (isset($JSONArr["ID"]) && $JSONArr["ID"] !== false && $JSONArr["ID"] !== "") {
       $StartId = $JSONArr["ID"];
     } else {
-      $StartId = 0; //\GlobalConfig::$ConfigArray["StartGroup"];
+      $StartId = 0; //\NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup');
     }
 
     $MyCache = $this->DIC->get(TRMCache::class);
@@ -97,7 +97,7 @@ class NewAjaxMenuJSONController extends NewAjaxCommonController
     if (isset($JSONArr["GroupId"]) && $JSONArr["GroupId"] !== false && $JSONArr["GroupId"] !== "") {
       $GroupId = $JSONArr["GroupId"];
     } else {
-      $GroupId = \GlobalConfig::$ConfigArray["StartGroup"];
+      $GroupId = \NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup');
     }
     if (isset($JSONArr["URL"]) && $JSONArr["URL"] !== false && $JSONArr["URL"] !== "") {
       $URL = $JSONArr["URL"];

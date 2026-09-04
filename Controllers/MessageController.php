@@ -33,10 +33,10 @@ public function actionForm()
 {
     if( strlen($this->StatusText)>0 ) { $this->view->setVar("Text", $this->StatusText); }
 
-        $Title = "Обратная связь - " . \GlobalConfig::$ConfigArray["SiteName"];
+        $Title = "Обратная связь - " . \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName');
         $Description = "Форма обратной связи для запросов по подвесным потолкам, комплектующим и расчету заказа.";
 
-        $this->setSEO($Title, $Description, \GlobalConfig::$ConfigArray["CommonKeyWords"] . ", обратная связь");
+        $this->setSEO($Title, $Description, \NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonKeyWords') . ", обратная связь");
         $this->view->setMeta("robots", "NOINDEX,NOFOLLOW");
         $this->view->setCanonical($this->buildAbsoluteUrl("/message/form"));
         $this->setTwitterCard("summary", array(
@@ -49,8 +49,8 @@ public function actionForm()
             "url" => $this->buildAbsoluteUrl("/message/form"),
             "description" => $Description,
         ));
-    $this->view->setVar("coding", \GlobalConfig::$ConfigArray["Charset"]);
-    $this->view->setVarsArray(\GlobalConfig::$ConfigArray);
+    $this->view->setVar("coding", \NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset'));
+    $this->view->setVarsArray(\NewCMS\Libs\Config\NewCmsConfig::current()->getRaw());
 
     if( count( $this->Request->request->all() ) )
     {
@@ -89,7 +89,7 @@ public function actionSend()
         $email->setCoding($this->Request->request->get("coding"));
         $email->setEmailFrom($emailaddress);
         $email->setNameFrom($fio);
-        $email->setEmailTo(\GlobalConfig::$ConfigArray["email"]); // "info@superventilator.ru");
+        $email->setEmailTo(\NewCMS\Libs\Config\NewCmsConfig::current()->get('email')); // "info@superventilator.ru");
 
         $email->setConfig( CONFIG . "/emailconfig.php" );
 
@@ -99,7 +99,7 @@ public function actionSend()
                             . "<br>E-mail: " . $emailaddress
                             . "<br>Name: " . $fio);
 
-        $email->setSubject( \GlobalConfig::$ConfigArray["SiteName"] );
+        $email->setSubject( \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName') );
         $email->setReplyTo( $emailaddress, $fio );
 
         $email->sendEmail();

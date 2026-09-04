@@ -2,7 +2,6 @@
 
 namespace NewCMS\Controllers\AJAX;
 
-use GlobalConfig;
 use NewCMS\Controllers\AJAX\NewAjaxCommonController;
 use NewCMS\Domain\NewNews;
 use NewCMS\Repositories\NewNewsRepository;
@@ -86,7 +85,7 @@ public function actionGetNewsList()
  */
 public function actionGenerateNewsXML()
 {
-    $filename = GlobalConfig::$ConfigArray["newsxmlfilename"];
+    $filename = \NewCMS\Libs\Config\NewCmsConfig::current()->get('newsxmlfilename');
 
     $this->Rep->setLimit($this->XMLNewCount);
 
@@ -112,12 +111,12 @@ public function actionGenerateNewsXML()
 
 private function startNewsToXML($file)
 {
-    $file->addToBuffer('<?xml version="1.0" encoding="'.GlobalConfig::$ConfigArray["Charset"].'" ?>'.PHP_EOL);
+    $file->addToBuffer('<?xml version="1.0" encoding="'.\NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset').'" ?>'.PHP_EOL);
     $file->addToBuffer('<rss version="2.0">'.PHP_EOL);
     $file->addToBuffer('<channel>'.PHP_EOL);
-    $file->addToBuffer('<title>'.GlobalConfig::$ConfigArray["SiteName"].'</title>'.PHP_EOL);
-    $file->addToBuffer('<link>'.GlobalConfig::$ConfigArray["CommonURL"].'</link>'.PHP_EOL);
-    $file->addToBuffer('<description>'.GlobalConfig::$ConfigArray["NewsTitle"].'</description>'.PHP_EOL);
+    $file->addToBuffer('<title>'.\NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName').'</title>'.PHP_EOL);
+    $file->addToBuffer('<link>'.\NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonURL').'</link>'.PHP_EOL);
+    $file->addToBuffer('<description>'.\NewCMS\Libs\Config\NewCmsConfig::current()->get('NewsTitle').'</description>'.PHP_EOL);
     $file->addToBuffer('<language>ru</language>'.PHP_EOL);
 }
 

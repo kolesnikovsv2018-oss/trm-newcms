@@ -18,9 +18,9 @@ class ArticleCrumbs extends TRMCrumbs
     $this->TitleField = "ArticlesTypeName";
     $this->URLField = "ArticlesURL";
 
-    $this->FirstTitle = \GlobalConfig::$ConfigArray["SiteName"]; //"Подвесной.РУ";
+    $this->FirstTitle = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName'); //"Подвесной.РУ";
     $this->FirstLink = "/";
 
-    $this->URLPrefix = ""; // "/" . trim(\GlobalConfig::$ConfigArray["articlesListPrefix"], "/");
+    $this->URLPrefix = ""; // "/" . trim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('articlesListPrefix'), "/");
   }
 } // ArticleCrumbs

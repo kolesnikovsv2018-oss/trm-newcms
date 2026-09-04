@@ -11,12 +11,32 @@ namespace NewCMS\Libs\Config;
  */
 final class NewCmsConfig
 {
+    /** @var NewCmsConfig|null — текущая конфигурация (после register()) */
+    private static ?NewCmsConfig $Current = null;
+
     /** @var array */
     private $Params;
 
     public function __construct(array $Params)
     {
         $this->Params = $Params;
+    }
+
+    /** Регистрирует конфигурацию как текущую (вызывается NewCmsExtension::register()) */
+    public static function setCurrent(self $Config): void
+    {
+        self::$Current = $Config;
+    }
+
+    /** Текущая конфигурация (после NewCmsExtension::register()) */
+    public static function current(): self
+    {
+        if (self::$Current === null) {
+            throw new \RuntimeException(
+                'NewCmsConfig is not registered — call NewCmsExtension::register() first'
+            );
+        }
+        return self::$Current;
     }
 
     /** @return array — исходный массив параметров (для легаси-хранилища) */

@@ -289,7 +289,7 @@ AND  `features`.`ID_Feature` = {$IdFeature} ";
     //    $url = urldecode($url);
 
     // все адреса в URL имеют кодировку UTF-8, переводим в кодировку, установленную для сайта
-    $url = TRMLib::conv($url, "UTF-8", \GlobalConfig::$ConfigArray["Charset"]);
+    $url = TRMLib::conv($url, "UTF-8", \NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset'));
 
     //разбиваем строку параметров через / в массив, 
     //что бы получить все установленные характеристики

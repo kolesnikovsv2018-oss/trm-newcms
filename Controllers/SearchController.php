@@ -57,12 +57,12 @@ public function actionIndex()
         $this->view->setVar("SearchResultText", $e->getMessage() );
     }
 
-        $Title = \GlobalConfig::$ConfigArray["SearchTitle"];
+        $Title = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SearchTitle');
         $Description = !empty($Quest)
-            ? (\GlobalConfig::$ConfigArray["SearchResultTitle"] . ": " . $Quest)
-            : \GlobalConfig::$ConfigArray["SearchTitle"];
+            ? (\NewCMS\Libs\Config\NewCmsConfig::current()->get('SearchResultTitle') . ": " . $Quest)
+            : \NewCMS\Libs\Config\NewCmsConfig::current()->get('SearchTitle');
 
-        $this->setSEO($Title, $Description, \GlobalConfig::$ConfigArray["CommonKeyWords"] . ", поиск");
+        $this->setSEO($Title, $Description, \NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonKeyWords') . ", поиск");
         $this->view->setCanonical($this->buildAbsoluteUrl("/search"));
         $this->view->setMeta("robots", "NOINDEX,FOLLOW");
         $this->setTwitterCard("summary", array(
@@ -90,15 +90,15 @@ public function actionYandex()
 {
     $this->view->addCss( TOPIC . "/css/search.css" , true);
 
-        $Title = \GlobalConfig::$ConfigArray["SearchTitle"];
-        $Description = \GlobalConfig::$ConfigArray["SearchTitle"];
-        $KeyWords = \GlobalConfig::$ConfigArray["CommonKeyWords"] . ", поиск";
+        $Title = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SearchTitle');
+        $Description = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SearchTitle');
+        $KeyWords = \NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonKeyWords') . ", поиск";
 
         $RawText = trim((string)$this->Request->query->get("text", ""));
 
         if ($RawText !== "") {
-            $Title = \GlobalConfig::$ConfigArray["SearchResultTitle"] . ": " . $RawText;
-            $Description = \GlobalConfig::$ConfigArray["SearchResultTitle"] . ": " . $RawText;
+            $Title = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SearchResultTitle') . ": " . $RawText;
+            $Description = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SearchResultTitle') . ": " . $RawText;
             $KeyWords .= ", " . $RawText;
         }
 

@@ -2,7 +2,6 @@
 
 namespace NewCMS\Controllers\AJAX;
 
-use GlobalConfig;
 use NewCMS\Controllers\AJAX\NewAjaxCommonController;
 use NewCMS\Domain\NewComplexProduct;
 use NewCMS\Domain\NewGroup;
@@ -97,7 +96,7 @@ class NewAjaxYandexController extends NewAjaxCommonController
    */
   private function getFullURL($LocalURL, $Prefix = "")
   {
-    $Res = rtrim(GlobalConfig::$ConfigArray["CommonURL"], "/\\");
+    $Res = rtrim(\NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonURL'), "/\\");
     if (!empty($Prefix)) {
       $Res .= "/" . trim($Prefix, "/\\");
     }
@@ -126,10 +125,10 @@ class NewAjaxYandexController extends NewAjaxCommonController
     $GroupRep->setSubGroupsFlag();
     $GroupRep->setPresentFlagCondition();
     $GroupRep->setOrderField("GroupID_parent");
-    $GroupRep->setCurrentGroupId(GlobalConfig::$ConfigArray["StartGroup"]);
+    $GroupRep->setCurrentGroupId(\NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup'));
     $GroupList = $GroupRep->getAll();
 
-    //\TRMEngine\Helpers\TRMLib::sp(GlobalConfig::$ConfigArray["StartGroup"]);
+    //\TRMEngine\Helpers\TRMLib::sp(\NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup'));
     //header("Content-Type: text/html; charset=utf-8", true);
     //foreach( $GroupList as $Group )
     //{
@@ -150,11 +149,11 @@ class NewAjaxYandexController extends NewAjaxCommonController
       . "\" />";
     $xml = new SimpleXMLExtend($XMLStartStr); //\SimpleXMLElement($XMLStartStr);
     $Shop = $xml->addChild("shop");
-    $Shop->addChild("name", GlobalConfig::$ConfigArray["SiteName"]);
+    $Shop->addChild("name", \NewCMS\Libs\Config\NewCmsConfig::current()->get('SiteName'));
     // $Shop->addChild( "company", "ООО Офис под ключ" );
     $Shop->addChild("company", "Подвесной.РУ");
 
-    $Shop->addChild("url", GlobalConfig::$ConfigArray["CommonURL"]);
+    $Shop->addChild("url", \NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonURL'));
 
     $Shop->addChild("platform", "NewCMS@TRMEngine");
     $Shop->addChild("version", "0.1");
@@ -208,11 +207,11 @@ class NewAjaxYandexController extends NewAjaxCommonController
       if (!empty($LiteProduct["table1"]["articul"])) {
         $Offer->addChild("vendorCode", htmlspecialchars($LiteProduct->getData("table1", "articul")));
       }
-      $Offer->addChild("url", $this->getFullURL($LiteProduct->getData("table1", "PriceTranslit"), GlobalConfig::$ConfigArray["catalogPrefix"]));
+      $Offer->addChild("url", $this->getFullURL($LiteProduct->getData("table1", "PriceTranslit"), \NewCMS\Libs\Config\NewCmsConfig::current()->get('catalogPrefix')));
       $Offer->addChild("price", $LiteProduct->getData("table1", "Price3"));
       $Offer->addChild("currencyId", TRMValuta::$Valutas[1][0]); // $LiteProduct["table1"]["valuta"]][0] );
       $Offer->addChild("categoryId", $LiteProduct["table1"]["Group"]);
-      $Offer->addChild("picture", $this->getFullURL($LiteProduct["table1"]["Image"] . ".jpg", GlobalConfig::$ConfigArray["ImageCatalog"]));
+      $Offer->addChild("picture", $this->getFullURL($LiteProduct["table1"]["Image"] . ".jpg", \NewCMS\Libs\Config\NewCmsConfig::current()->get('ImageCatalog')));
 
       //        $Offer->addChild("step-quantity", $LiteProduct->getData("table1", "Quant") );
       //        $Offer->addChild("min-quantity", $LiteProduct->getData("table1", "MinPart") );

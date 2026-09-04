@@ -135,10 +135,10 @@ class NewBasketController extends BaseController
     // ********* форма с товарами !!! ****************
     $this->view = new ArticlesBaseView($this, "basket");
 
-    $Title = \GlobalConfig::$ConfigArray["BasketTitle"];
-    $Description = \GlobalConfig::$ConfigArray["CompanyName"] . " - оформление заказа на поставку подвесных потолков и комплектующих";
+    $Title = \NewCMS\Libs\Config\NewCmsConfig::current()->get('BasketTitle');
+    $Description = \NewCMS\Libs\Config\NewCmsConfig::current()->get('CompanyName') . " - оформление заказа на поставку подвесных потолков и комплектующих";
 
-    $this->setSEO($Title, $Description, \GlobalConfig::$ConfigArray["CommonKeyWords"] . ", заказ товаров");
+    $this->setSEO($Title, $Description, \NewCMS\Libs\Config\NewCmsConfig::current()->get('CommonKeyWords') . ", заказ товаров");
     $this->view->setMeta("robots", "NOINDEX,NOFOLLOW");
     $this->view->setCanonical($this->buildAbsoluteUrl("/new-basket"));
     $this->setTwitterCard("summary", array(
@@ -152,7 +152,7 @@ class NewBasketController extends BaseController
       "description" => $Description,
     ));
     $this->view->setVar("PageTitle", $Title);
-    $this->view->setVarsArray(\GlobalConfig::$ConfigArray);
+    $this->view->setVarsArray(\NewCMS\Libs\Config\NewCmsConfig::current()->getRaw());
     $this->view->addCSS(TOPIC . "/css/basket.css", true);
     $this->view->addCSS(TOPIC . "/css/forcatalogpage.css", true);
     // анти-спам: передаем в шаблон состояние ограничения частоты отправки заявок
@@ -172,8 +172,8 @@ class NewBasketController extends BaseController
 
       $this->view = new CMSBaseView("basketform", null);
       $this->view->setVar("Goods", $this->CurrentBasket->Goods);
-      $this->view->setVar("catalogPrefix", \GlobalConfig::$ConfigArray["catalogPrefix"]);
-      $this->view->setVar("ImageCatalog", \GlobalConfig::$ConfigArray["ImageCatalog"]);
+      $this->view->setVar("catalogPrefix", \NewCMS\Libs\Config\NewCmsConfig::current()->get('catalogPrefix'));
+      $this->view->setVar("ImageCatalog", \NewCMS\Libs\Config\NewCmsConfig::current()->get('ImageCatalog'));
       return $this->view->render();
     }
 
@@ -226,14 +226,14 @@ class NewBasketController extends BaseController
           . "<a href=\""
           . ((strlen($this->Request->server->get("HTTPS")) && $this->Request->server->get("HTTPS", null) != "off") ? "https://" : "http://")
           . $this->Request->getHost() . "/"
-          . \GlobalConfig::$ConfigArray["catalogPrefix"] . "/"
+          . \NewCMS\Libs\Config\NewCmsConfig::current()->get('catalogPrefix') . "/"
           . $this->CurrentBasket->Goods[$i]->Item->getData("table1", "PriceTranslit") . "\">"
           . $this->CurrentBasket->Goods[$i]->Item->getData("table1", "Name")
           . "(" . $this->CurrentBasket->Goods[$i]->Item->getData("vendors", "VendorName") . ")</a> - "
           . $this->CurrentBasket->Goods[$i]->Count . " " . $this->CurrentBasket->Goods[$i]->Item->getData("unit", "UnitShort") . "<br>";
       }
 
-      if (isset(\GlobalConfig::$ConfigArray["PriceCheck"])) {
+      if (isset(\NewCMS\Libs\Config\NewCmsConfig::current()->get('PriceCheck'))) {
         $Message .= "На сумму <b>" . $this->CurrentBasket->calculateSumm() . "</b> руб.<br>";
         header("X-PriceCheck: 1");
       }
@@ -252,9 +252,9 @@ class NewBasketController extends BaseController
 
       // Все, что приходит из формы, приходит в кодировке DEFAULT_CHARSET = UTF-8,
       // перекодируем в Charset установленный для проекта...
-      if (strtolower(\GlobalConfig::$ConfigArray["Charset"]) !== self::DEFAULT_CHARSET) {
-        TRMLib::conv($msg, self::DEFAULT_CHARSET, \GlobalConfig::$ConfigArray["Charset"]);
-        TRMLib::conv($fio, self::DEFAULT_CHARSET, \GlobalConfig::$ConfigArray["Charset"]);
+      if (strtolower(\NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset')) !== self::DEFAULT_CHARSET) {
+        TRMLib::conv($msg, self::DEFAULT_CHARSET, \NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset'));
+        TRMLib::conv($fio, self::DEFAULT_CHARSET, \NewCMS\Libs\Config\NewCmsConfig::current()->get('Charset'));
       }
 
       $email = new TRMEMail();

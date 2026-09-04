@@ -164,7 +164,7 @@ protected function generateQuery($quest, $andor)
     LEFT JOIN `group` on `table1`.`Group`=`group`.`ID_group`
     WHERE `present`=1
     AND (" . $mainSearch . ")
-    ORDER BY `table1`.`price0` ASC, `table1`.`Group`, vendor ASC LIMIT 0,".\GlobalConfig::$ConfigArray["SearchResultCount"];
+    ORDER BY `table1`.`price0` ASC, `table1`.`Group`, vendor ASC LIMIT 0,".\NewCMS\Libs\Config\NewCmsConfig::current()->get('SearchResultCount');
 }
 
 /**

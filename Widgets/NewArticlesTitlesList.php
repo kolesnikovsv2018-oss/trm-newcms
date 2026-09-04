@@ -69,7 +69,7 @@ static function printArticlesTitles(NewArticleRepository $ArticlesRep, int $Arti
     foreach( $ArticlesList as $Article )
     {
         printf("<li><a href=\"/%s/%s/%s\">%s</a> (%s)</li>", 
-            \GlobalConfig::$ConfigArray["articlesListPrefix"], 
+            \NewCMS\Libs\Config\NewCmsConfig::current()->get('articlesListPrefix'), 
             $Article["articlestype"]["ArticlesURL"], 
             $Article["articles"]["ArticleURL"], 
             $Article["articles"]["Title"], 
