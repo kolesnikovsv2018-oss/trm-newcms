@@ -48,7 +48,7 @@ class NewFeaturesSelector
   public function __construct(TRMMySqlObject $DBO)
   {
     $this->DBO = $DBO;
-    $this->PageNumericName = defined(PAGE_NUMERIC_NAME) ? PAGE_NUMERIC_NAME : "page";
+    $this->PageNumericName = \NewCMS\Libs\Config\NewCmsConfig::current()->getPaginationParameter();
   }
 
   /**
@@ -394,7 +394,7 @@ AND  `features`.`ID_Feature` = {$IdFeature} ";
     }
 
     $FSView = new CMSBaseView("selector", null);
-    $FSView->setPathToViews(ROOT . TOPIC . '/views/widgets');
+    $FSView->setPathToViews(\NewCMS\Libs\NewCMSPathResolver::getTopicFsPath() . '/views/widgets');
     $FSView->setVar("FeaturesSelector", $FeaturesSelector);
 
     $FSView->render();

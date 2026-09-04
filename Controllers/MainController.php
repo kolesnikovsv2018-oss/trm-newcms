@@ -109,7 +109,7 @@ class MainController extends BaseController
     $this->setTwitterCard("summary", array(
       "title" => $Title,
       "description" => $Description,
-      "image" => $this->buildAbsoluteUrl(TOPIC . "/images/logo1.gif"),
+      "image" => $this->buildAbsoluteUrl(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/images/logo1.gif"),
     ));
     $this->addAboutPageJsonLd(array(
       "name" => $Title,
@@ -134,7 +134,7 @@ class MainController extends BaseController
     $this->setTwitterCard("summary", array(
       "title" => $Title,
       "description" => $Description,
-      "image" => $this->buildAbsoluteUrl(TOPIC . "/images/logo1.gif"),
+      "image" => $this->buildAbsoluteUrl(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/images/logo1.gif"),
     ));
     $this->addContactPageJsonLd(array(
       "name" => $Title,
@@ -296,8 +296,8 @@ class MainController extends BaseController
           $this->view->setVar("ShowDescriptionFlag", true);
           $this->view->setVar("catalogflag", true);
 
-          $this->view->addCSS(TOPIC . "/css/forcatalogpage.css", true);
-          $this->view->addCSS(TOPIC . "/css/selector.css", false);
+          $this->view->addCSS(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/css/forcatalogpage.css", true);
+          $this->view->addCSS(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/css/selector.css", false);
 
           ob_start();
           $this->view->render();
@@ -466,7 +466,7 @@ class MainController extends BaseController
     $this->setTwitterCard("summary_large_image", array(
       "title" => $Title,
       "description" => $Description,
-      "image" => $GroupImage ? $this->buildAbsoluteUrl($GroupImage) : $this->buildAbsoluteUrl(TOPIC . "/images/logo1.gif"),
+      "image" => $GroupImage ? $this->buildAbsoluteUrl($GroupImage) : $this->buildAbsoluteUrl(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/images/logo1.gif"),
     ));
     $this->addCollectionPageJsonLd(array(
       "name" => $Title,
@@ -484,8 +484,8 @@ class MainController extends BaseController
 
     $this->view->setVar("catalogflag", true);
 
-    $this->view->addCSS(TOPIC . "/css/forcatalogpage.css", true);
-    $this->view->addCSS(TOPIC . "/css/selector.css", false);
+    $this->view->addCSS(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/css/forcatalogpage.css", true);
+    $this->view->addCSS(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/css/selector.css", false);
 
     //--------------------------- GROUP++ -------------------------------------------------------------
     $Group->setData("group", "GroupVisits", $Group["group"]["GroupVisits"] + 1);
@@ -628,8 +628,8 @@ class MainController extends BaseController
 
     //--------------------------- setVar -------------------------------------------------------------
 
-    $this->view->addCSS(TOPIC . "/css/forcatalogpage.css", true);
-    $this->view->addCSS(TOPIC . "/css/selector.css", false);
+    $this->view->addCSS(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/css/forcatalogpage.css", true);
+    $this->view->addCSS(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/css/selector.css", false);
     $ProductTitle = htmlspecialchars($LiteProduct["table1"]["Name"]);
     $ProductImage = "";
     if (strlen(trim($LiteProduct["table1"]["Image"] ?? "")) > 0) {
@@ -642,7 +642,7 @@ class MainController extends BaseController
     $this->setProductSocialMeta(
       $ProductTitle,
       $Description,
-      $ProductImage ? $this->buildAbsoluteUrl($ProductImage) : $this->buildAbsoluteUrl(TOPIC . "/images/logo1.gif"),
+      $ProductImage ? $this->buildAbsoluteUrl($ProductImage) : $this->buildAbsoluteUrl(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/images/logo1.gif"),
       $LiteProduct["table1"]["Name"]
     );
     $this->addProductJsonLd(array(

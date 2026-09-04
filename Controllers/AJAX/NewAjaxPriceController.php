@@ -19,7 +19,7 @@ public function actionAjaxGetPrice()
     {
         $StartGroup = \NewCMS\Libs\Config\NewCmsConfig::current()->get('StartGroup');
     }
-    $filename = ROOT . "/" . \NewCMS\Libs\Config\NewCmsConfig::current()->get('pricefilename');
+    $filename = \NewCMS\Libs\Config\NewCmsConfig::current()->getProjectRoot() . "/" . \NewCMS\Libs\Config\NewCmsConfig::current()->get('pricefilename');
 
     $price = new NewPrice(
             $StartGroup, 

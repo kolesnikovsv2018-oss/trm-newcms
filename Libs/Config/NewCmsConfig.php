@@ -132,4 +132,16 @@ final class NewCmsConfig
     {
         return (string)$this->get('cms_web_path', '');
     }
+
+    /** Корень host-проекта (задаётся host-приложением явно; для файлов прайса/каталогов) */
+    public function getProjectRoot(): string
+    {
+        return (string)$this->get('project_root', '');
+    }
+
+    /** Имя URL-параметра пагинации */
+    public function getPaginationParameter(): string
+    {
+        return (string)$this->get('pagination_parameter', 'page');
+    }
 }

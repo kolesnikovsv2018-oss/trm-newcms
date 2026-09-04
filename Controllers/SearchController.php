@@ -25,7 +25,7 @@ protected function getSearchQueryRepository(): NewSearchQueryRepository
  */
 public function actionIndex()
 {
-    $this->view->addCss( TOPIC . "/css/search.css" , true);
+    $this->view->addCss( \NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/css/search.css" , true);
 
     $Quest = $this->Request->query->get("quest", "");
     if( !empty($Quest) )
@@ -68,7 +68,7 @@ public function actionIndex()
         $this->setTwitterCard("summary", array(
             "title" => $Title,
             "description" => $Description,
-            "image" => $this->buildAbsoluteUrl(TOPIC . "/images/logo1.gif"),
+            "image" => $this->buildAbsoluteUrl(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/images/logo1.gif"),
         ));
         $this->addSearchResultsPageJsonLd(array(
             "name" => $Title,
@@ -88,7 +88,7 @@ public function actionIndex()
  */
 public function actionYandex()
 {
-    $this->view->addCss( TOPIC . "/css/search.css" , true);
+    $this->view->addCss( \NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/css/search.css" , true);
 
         $Title = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SearchTitle');
         $Description = \NewCMS\Libs\Config\NewCmsConfig::current()->get('SearchTitle');
@@ -109,7 +109,7 @@ public function actionYandex()
         $this->setTwitterCard("summary", array(
             "title" => $Title,
             "description" => $Description,
-            "image" => $this->buildAbsoluteUrl(TOPIC . "/images/logo1.gif"),
+            "image" => $this->buildAbsoluteUrl(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/images/logo1.gif"),
         ));
         $this->addWebPageJsonLd(array(
             "name" => $Title,

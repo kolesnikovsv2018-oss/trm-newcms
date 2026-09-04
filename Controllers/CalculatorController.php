@@ -17,7 +17,7 @@ class CalculatorController extends BaseController
     $this->setTwitterCard("summary", array(
       "title" => $Title,
       "description" => $Description,
-      "image" => $this->buildAbsoluteUrl(TOPIC . "/images/logo1.gif"),
+      "image" => $this->buildAbsoluteUrl(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/images/logo1.gif"),
     ));
     $this->addWebApplicationJsonLd(array(
       "name" => $Title,
@@ -28,8 +28,8 @@ class CalculatorController extends BaseController
     ));
     $this->view->setVar("PageTitle", $Title); // "Калькулятор подвесного потолка"
 
-    $this->view->addCss((defined("TOPIC") ? TOPIC : "") . "/css/calculator.css");
-    $this->view->addCSS((defined("TOPIC") ? TOPIC : "") . "/css/forcatalogpage.css", true);
+    $this->view->addCss(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/css/calculator.css");
+    $this->view->addCSS(\NewCMS\Libs\NewCMSPathResolver::getTopicWebPath() . "/css/forcatalogpage.css", true);
 
     return $this->view->render();
   }

@@ -309,7 +309,7 @@ class AjaxImageServiceController
     // папка в которую загружается файл на сервере, без закрывающего /
     if (!$this->generateGIFAndJPGImage(
       $NameWithoutExt,
-      ROOT . "/" . $CatalogName,
+      \NewCMS\Libs\Config\NewCmsConfig::current()->getProjectRoot() . "/" . $CatalogName,
       $this->UploadFile->getPathname()
     )) {
       $this->exitOnLoadError();
@@ -347,7 +347,7 @@ class AjaxImageServiceController
     // папка в которую загружается файл на сервере, без закрывающего /
     if (!$this->generateSmallAndNormalImage(
       $NameWithoutExt,
-      ROOT . "/" . $CatalogName,
+      \NewCMS\Libs\Config\NewCmsConfig::current()->getProjectRoot() . "/" . $CatalogName,
       $SmallPrefix,
       $this->UploadFile->getPathname(),
       $Ext,

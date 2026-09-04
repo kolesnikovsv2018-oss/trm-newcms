@@ -125,7 +125,7 @@ class NewPrestigeProducts
   static public function render(TRMDataObjectsCollectionInterface $PrestigeProductCollection): void
   {
     $ShortGoodsView = new CMSBaseView("onegoods", null);
-    $ShortGoodsView->setPathToViews(ROOT . TOPIC . "/views/main/inc");
+    $ShortGoodsView->setPathToViews(\NewCMS\Libs\NewCMSPathResolver::getTopicFsPath() . "/views/main/inc");
 
     $ShortGoodsView->setVar("showComment", false);
 
