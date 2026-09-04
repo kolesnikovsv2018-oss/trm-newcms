@@ -28,6 +28,18 @@ final class NewCmsConfig
         self::$Current = $Config;
     }
 
+    /** Зарегистрирована ли конфигурация (для defensive-доступа вне bootstrap) */
+    public static function isRegistered(): bool
+    {
+        return self::$Current !== null;
+    }
+
+    /** Каталог данных рассылки Sender (задаётся host-приложением; пусто — legacy-локация пакета) */
+    public function getSenderDataDir(): string
+    {
+        return (string)$this->get('sender_data_dir', '');
+    }
+
     /** Текущая конфигурация (после NewCmsExtension::register()) */
     public static function current(): self
     {

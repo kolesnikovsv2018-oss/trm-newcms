@@ -20,7 +20,25 @@
   `autoload.files` сохраняет только `GlobalConfig.php` (легаси-хранилище)
   до финала 2.0.
 
-## [1.0.5] - 2026-09-04
+## [2.1.1] - 2026-09-04
+
+### Changed
+
+- **Данные рассылки Sender покидают пакет** (`Libs/Sender/*.txt` удалены —
+  это контент конкретного сайта, нарушавший автономность пакета). Путь к
+  каталогу данных задаётся host-приложением параметром `sender_data_dir`
+  (`NewCmsConfig::getSenderDataDir()`); `NewEmailAutoSender` строит все
+  пути файлов (1ps.txt, last.txt, base.txt, blacklist.txt, errorlog.txt)
+  от этого каталога; при незарегистрированной конфигурации (cron вне
+  bootstrap) — legacy-фолбэк `__DIR__`.
+- Добавлен `NewCmsConfig::isRegistered()` для defensive-доступа.
+
+### Removed
+
+- `Libs/Sender/{1ps*.txt,base*.txt,blacklist.txt,last.txt,errorlog.txt}` —
+  перенесены в host (`site/data/Sender/`).
+
+## [2.0.0] - 2026-09-04
 
 ### Fixed
 

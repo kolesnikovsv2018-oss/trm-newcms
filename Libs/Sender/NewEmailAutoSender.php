@@ -150,6 +150,21 @@ protected $SiteName = "";
 public function __construct(array $EmailConfig)
 {
     $this->CurrentWorkDir = __DIR__;
+    // OQ-07: каталог данных рассылки - параметр host-приложения (sender_data_dir);
+    // пусто/не зарегистрировано - legacy __DIR__ (каталог пакета)
+    if (class_exists('NewCMS\Libs\Config\NewCmsConfig')
+        && \NewCMS\Libs\Config\NewCmsConfig::isRegistered())
+    {
+        $SenderDataDir = \NewCMS\Libs\Config\NewCmsConfig::current()->getSenderDataDir();
+        if ($SenderDataDir !== '') {
+            $this->CurrentWorkDir = rtrim($SenderDataDir, '/\\');
+            $this->MessageFileName = $this->CurrentWorkDir . '/' . self::DEFAULT_MESSAGE_FILE_NAME;
+            $this->LastFileName = $this->CurrentWorkDir . '/' . self::DEFAULT_LAST_FILE_NAME;
+            $this->EmailBaseFileName = $this->CurrentWorkDir . '/' . self::DEFAULT_EMAIL_BASE_FILE_NAME;
+            $this->BlackListFileName = $this->CurrentWorkDir . '/' . self::DEFAULT_BLACK_LIST_FILE_NAME;
+            $this->ErrorLogFileName = $this->CurrentWorkDir . '/' . self::DEFAULT_ERROR_LOG_FILE_NAME;
+        }
+    }
     
     $this->SiteName = filter_input(INPUT_SERVER, "SERVER_NAME", FILTER_SANITIZE_ENCODED); // $_SERVER["SERVER_NAME"];
     $this->resetLastInfo();
